@@ -29,3 +29,5 @@ jobs:
       - name: Deploy
         id: deploy
         uses: brentd/fly-staging-app@v1
+        with:
+          name: heyloft-maraudersmap-backend-pr-${{ github.event.number }}
