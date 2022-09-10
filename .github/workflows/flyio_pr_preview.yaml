@@ -7,6 +7,7 @@ env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
   FLY_REGION: iad
   FLY_ORG: personal
+  FLY_APP: heyloft-maraudersmap-backend-pr-${{ github.event.number }}
 
 jobs:
   staging_app:
@@ -19,7 +20,7 @@ jobs:
     # Create a GitHub deployment environment per staging app so it shows up
     # in the pull request UI.
     environment:
-      name: heyloft-maraudersmap-backend-pr-${{ github.event.number }}
+      name: pr-${{ github.event.number }}
       url: ${{ steps.deploy.outputs.url }}
 
     steps:
