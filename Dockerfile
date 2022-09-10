@@ -4,7 +4,7 @@ WORKDIR /app
 
 RUN pip install "poetry==1.2.0"
 
-COPY pyproject.toml poetry.lock .
+COPY pyproject.toml poetry.lock ./
 
 RUN poetry install
 
