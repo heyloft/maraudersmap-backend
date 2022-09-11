@@ -25,7 +25,7 @@ jobs:
 
       - name: Deploy
         id: deploy
-        uses: brentd/fly-staging-app@v1
+        uses: heyloft/fly-pr-review-apps@7a423373b48f8f27b4b60e0d6380054d9a673fc9
         with:
           region: ams
           org: personal
