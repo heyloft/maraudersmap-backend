@@ -30,3 +30,4 @@ jobs:
           region: ams
           org: personal
           name: heyloft-maraudersmap-backend-pr-${{ github.event.number }}
+          postgres: heyloft-maraudersmap-pg
