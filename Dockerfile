@@ -6,8 +6,13 @@ RUN pip install "poetry==1.2.0"
 
 COPY pyproject.toml poetry.lock ./
 
+RUN poetry config virtualenvs.create false
+
 RUN poetry install
 
 COPY . .
- 
-CMD ["poetry", "run", "uvicorn", "maraudersmap.main:app", "--host", "0.0.0.0", "--port", "8080"]
+
+ENV PYTHONPATH=/app
+
+RUN chmod +x entrypoint.sh
+CMD ["/bin/bash", "entrypoint.sh"]
