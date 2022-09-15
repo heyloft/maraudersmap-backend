@@ -34,6 +34,9 @@ poetry shell
 pre-commit install
 ```
 
+### Environment variables
+A template `base.env` file is included inside `/maraudersmap`, which can be copied to a local, gitignored `.env` file. These values are only used for local development (e.g. a local database connection string).
+
 ### Poetry integration with VS Code
 If you're using VS Code, you need to tell it where your Poetry virtualenv is located
 1. `Open Workspace Settings (JSON)` via the command palette (`Ctrl+Shift+P`). This will open `.vscode/settings.json`.
