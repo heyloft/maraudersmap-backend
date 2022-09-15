@@ -24,3 +24,6 @@ dmypy.json
 
 # Docs
 *.md
+
+# Local env file
+**/.env
