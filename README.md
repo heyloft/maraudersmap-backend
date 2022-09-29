@@ -80,9 +80,10 @@ Valid:          True
 ## Run backend
 > make sure to [apply any new database migrations](#apply-migrations)
 ```bash
-uvicorn maraudersmap.main:app --reload
+cd maraudersmap
+uvicorn main:app --reload
 ```
-> omit `--reload` to disable *auto-reload*
+> must be run from `/maraudersmap` directory to recognize `.env`
 
 ## Database Migrations
 
