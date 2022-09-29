@@ -25,5 +25,8 @@ dmypy.json
 # Docs
 *.md
 
+# macOS
+**/.DS_Store
+
 # Local env file
 **/.env
