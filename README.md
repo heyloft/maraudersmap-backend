@@ -103,9 +103,10 @@ cp base.env .env
 2. Start server
 ```bash
 cd maraudersmap
-uvicorn main:app --reload
+uvicorn main:app --host 0.0.0.0 --reload
 ```
 > must be run from `/maraudersmap` directory to recognize `.env`
+> using `--host 0.0.0.0` seems to be required for accessing the backend via the public IP address
 
 ## Database Migrations
 
