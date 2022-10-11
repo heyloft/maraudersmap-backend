@@ -1,7 +1,8 @@
 from fastapi import Depends, FastAPI
+from fastapi.responses import PlainTextResponse
 from sqlalchemy.orm import Session
 
-from maraudersmap import crud, models, schemas
+from maraudersmap import ascii, crud, models, schemas
 from maraudersmap.database.database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
@@ -15,6 +16,11 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+@app.get("/", response_class=PlainTextResponse)
+def index():
+    return ascii.SNAIL
 
 
 @app.post("/items/", response_model=schemas.Item)
