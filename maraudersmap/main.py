@@ -28,12 +28,6 @@ def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return items
 
 
-@app.post("/pois/", response_model=schemas.POI)
-def create_poi(poi: schemas.POICreate, db: Session = Depends(get_db)):
-    return crud.create_poi(db=db, poi=poi)
-
-
-@app.get("/pois/", response_model=list[schemas.POI])
-def read_pois(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    pois = crud.get_pois(db, skip=skip, limit=limit)
-    return pois
+@app.post("/user/", response_model=schemas.User)
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    return crud.create_user(db=db, user=user)

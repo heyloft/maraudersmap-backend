@@ -1,10 +1,10 @@
-
+import uuid
 from datetime import datetime
 
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Float
+from sqlalchemy import (Boolean, Column, DateTime, Float, ForeignKey, Integer,
+                        String)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-import uuid
 
 from maraudersmap.database.base_class import Base
 from maraudersmap.extra_types import LatLongColumnType
@@ -35,11 +35,15 @@ class Quest(Base):
     unlock_method = Column(Integer)
     items = relationship("QuestItem", back_populates="quest")
     this_depends_on = relationship(
-        "QuestDependency", foreign_keys='QuestDependency.quest_to_finish_after_id', back_populates="quest_to_finish_after"
+        "QuestDependency",
+        foreign_keys="QuestDependency.quest_to_finish_after_id",
+        back_populates="quest_to_finish_after",
     )
     depend_on_this = relationship(
-        "QuestDependency", foreign_keys='QuestDependency.quest_to_finish_before_id',back_populates="quest_to_finish_before"
-    ) 
+        "QuestDependency",
+        foreign_keys="QuestDependency.quest_to_finish_before_id",
+        back_populates="quest_to_finish_before",
+    )
     event_id = Column(UUID(as_uuid=True), ForeignKey("events.id"))
     event = relationship("Event", back_populates="quests")
 
@@ -64,8 +68,16 @@ class QuestDependency(Base):
         index=True,
         default=uuid.uuid4,
     )
-    quest_to_finish_before = relationship("Quest", foreign_keys=[quest_to_finish_before_id], back_populates="depend_on_this")
-    quest_to_finish_after = relationship("Quest", foreign_keys=[quest_to_finish_after_id], back_populates="this_depends_on")
+    quest_to_finish_before = relationship(
+        "Quest",
+        foreign_keys=[quest_to_finish_before_id],
+        back_populates="depend_on_this",
+    )
+    quest_to_finish_after = relationship(
+        "Quest",
+        foreign_keys=[quest_to_finish_after_id],
+        back_populates="this_depends_on",
+    )
 
 
 class QuestItem(Base):
@@ -74,7 +86,8 @@ class QuestItem(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
     quest_id = Column(UUID(as_uuid=True), ForeignKey("quests.id"))
     quest = relationship("Quest", back_populates="items")
-    item_type = Column(Integer, default=False) # 0 = collectible, 1 = key, 2 = point of interest
+    # 0 = collectible, 1 = key, 2 = point of interest
+    item_type = Column(Integer, default=False)
     item_id = Column(UUID(as_uuid=True), ForeignKey("items.id"))
     item = relationship("Item", back_populates="instances")
     location = Column(LatLongColumnType)
@@ -85,12 +98,14 @@ class QuestItem(Base):
             self.quest.title,
         )
 
+
 class User(Base):
     __tablename__ = "users"
 
     id = Column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
     username = Column(String)
-    location = Column(LatLongColumnType)
+    location = Column(LatLongColumnType, nullable=True)
+
 
 class ItemOwnership(Base):
     __tablename__ = "itemOwnerships"
@@ -120,6 +135,7 @@ class QuestParticipation(Base):
     )
     status = Column(Integer)
 
+
 class Event(Base):
     __tablename__ = "events"
 
@@ -127,6 +143,7 @@ class Event(Base):
     active_from = Column(DateTime, default=datetime.now)
     active_to = Column(DateTime, nullable=True)
     quests = relationship("Quest", back_populates="event")
+
 
 class EventParticipation(Base):
     __tablename__ = "eventParticipation"

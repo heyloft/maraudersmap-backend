@@ -15,13 +15,9 @@ def create_item(db: Session, item: schemas.ItemCreate):
     return db_item
 
 
-def get_pois(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.POI).offset(skip).limit(limit).all()
-
-
-def create_poi(db: Session, poi: schemas.POICreate):
-    db_poi = models.POI(**poi.dict())
-    db.add(db_poi)
+def create_user(db: Session, user: schemas.UserCreate):
+    db_user = models.User(**user.dict())
+    db.add(db_user)
     db.commit()
-    db.refresh(db_poi)
-    return db_poi
+    db.refresh(db_user)
+    return db_user
