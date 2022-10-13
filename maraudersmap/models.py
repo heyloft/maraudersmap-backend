@@ -115,7 +115,6 @@ class User(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
     username = Column(String)
-    location = Column(LatLongColumnType, nullable=True)
 
 
 class ItemOwnership(Base):
@@ -143,6 +142,7 @@ class QuestParticipation(Base):
         index=True,
     )
     status = Column(Integer)
+    location = Column(LatLongColumnType, nullable=True)
 
 
 class Event(Base):
