@@ -1,8 +1,10 @@
 import uuid
 from datetime import datetime
+from enum import Enum, auto
 
-from sqlalchemy import (Boolean, Column, DateTime, Float, ForeignKey, Integer,
-                        String)
+from sqlalchemy import Column, DateTime
+from sqlalchemy import Enum as SQLEnum
+from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -10,10 +12,17 @@ from maraudersmap.database.base_class import Base
 from maraudersmap.extra_types import LatLongColumnType
 
 
+class ItemType(Enum):
+    COLLECTIBLE = auto()
+    KEY = auto()
+    POI = auto()
+
+
 class Item(Base):
     __tablename__ = "items"
 
     id = Column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
+    item_type = Column(SQLEnum(ItemType))
     title = Column(String)
     description = Column(String)
     icon = Column(String)
@@ -24,6 +33,11 @@ class Item(Base):
         return "<Item(title='%s')>" % self.title
 
 
+class UnlockMethod(Enum):
+    QR_CODE = auto()
+    LOCATION = auto()
+
+
 class Quest(Base):
     __tablename__ = "quests"
 
@@ -32,7 +46,7 @@ class Quest(Base):
     description = Column(String)
     active_from = Column(DateTime, default=datetime.now)
     active_to = Column(DateTime, nullable=True)
-    unlock_method = Column(Integer)
+    unlock_method = Column(SQLEnum(UnlockMethod))
     items = relationship("QuestItem", back_populates="quest")
     this_depends_on = relationship(
         "QuestDependency",
@@ -59,14 +73,12 @@ class QuestDependency(Base):
         ForeignKey("quests.id"),
         primary_key=True,
         index=True,
-        default=uuid.uuid4,
     )
     quest_to_finish_after_id = Column(
         UUID(as_uuid=True),
         ForeignKey("quests.id"),
         primary_key=True,
         index=True,
-        default=uuid.uuid4,
     )
     quest_to_finish_before = relationship(
         "Quest",
@@ -86,11 +98,10 @@ class QuestItem(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
     quest_id = Column(UUID(as_uuid=True), ForeignKey("quests.id"))
     quest = relationship("Quest", back_populates="items")
-    # 0 = collectible, 1 = key, 2 = point of interest
-    item_type = Column(Integer, default=False)
     item_id = Column(UUID(as_uuid=True), ForeignKey("items.id"))
     item = relationship("Item", back_populates="instances")
     location = Column(LatLongColumnType)
+    unlock_method = Column(SQLEnum(UnlockMethod))
 
     def __repr__(self):
         return "<QuestItem(item.title='%s', quest.title='%s')>" % (
@@ -124,14 +135,12 @@ class QuestParticipation(Base):
         ForeignKey("users.id"),
         primary_key=True,
         index=True,
-        default=uuid.uuid4,
     )
     quest_id = Column(
         UUID(as_uuid=True),
         ForeignKey("quests.id"),
         primary_key=True,
         index=True,
-        default=uuid.uuid4,
     )
     status = Column(Integer)
 
@@ -153,13 +162,11 @@ class EventParticipation(Base):
         ForeignKey("users.id"),
         primary_key=True,
         index=True,
-        default=uuid.uuid4,
     )
     quest_id = Column(
         UUID(as_uuid=True),
         ForeignKey("events.id"),
         primary_key=True,
         index=True,
-        default=uuid.uuid4,
     )
     status = Column(Integer)
