@@ -35,11 +35,11 @@ class Quest(Base):
     unlock_method = Column(Integer)
     items = relationship("QuestItem", back_populates="quest")
     this_depends_on = relationship(
-        "QuestDependency", back_populates="quest_to_finish_after"
+        "QuestDependency", foreign_keys='QuestDependency.quest_to_finish_after_id', back_populates="quest_to_finish_after"
     )
-    depends_on_this = relationship(
-        "QuestDependency", back_populates="quest_to_finish_before"
-    )
+    depend_on_this = relationship(
+        "QuestDependency", foreign_keys='QuestDependency.quest_to_finish_before_id',back_populates="quest_to_finish_before"
+    ) 
     event_id = Column(UUID(as_uuid=True), ForeignKey("events.id"))
     event = relationship("Event", back_populates="quests")
 
@@ -64,8 +64,8 @@ class QuestDependency(Base):
         index=True,
         default=uuid.uuid4,
     )
-    quest_to_finish_before = relationship("Quest", back_populates="depends_on_this")
-    quest_to_finish_after = relationship("Quest", back_populates="this_depends_on")
+    quest_to_finish_before = relationship("Quest", foreign_keys=[quest_to_finish_before_id], back_populates="depend_on_this")
+    quest_to_finish_after = relationship("Quest", foreign_keys=[quest_to_finish_after_id], back_populates="this_depends_on")
 
 
 class QuestItem(Base):
@@ -126,7 +126,7 @@ class Event(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
     active_from = Column(DateTime, default=datetime.now)
     active_to = Column(DateTime, nullable=True)
-    quests = relationship("Quest", back_populates="events")
+    quests = relationship("Quest", back_populates="event")
 
 class EventParticipation(Base):
     __tablename__ = "eventParticipation"
