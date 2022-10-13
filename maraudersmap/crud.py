@@ -50,3 +50,11 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+def create_quest(db: Session, quest: schemas.QuestCreate):
+    db_quest = models.Quest(**quest.dict())
+    db.add(db_quest)
+    db.commit()
+    db.refresh(db_quest)
+    return db_quest
