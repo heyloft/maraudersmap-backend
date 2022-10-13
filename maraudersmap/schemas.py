@@ -1,12 +1,31 @@
+from uuid import UUID
+
 from pydantic import BaseModel
 
 from maraudersmap.extra_types import LatLong
 
 
+class UserBase(BaseModel):
+    username: str
+
+
+class UserCreate(UserBase):
+    pass
+
+
+class User(UserBase):
+    id: UUID
+    location: LatLong | None = None
+
+    class Config:
+        orm_mode = True
+
+
 class ItemBase(BaseModel):
     title: str
     description: str | None = None
-    position: LatLong
+    collectible: bool
+    location: LatLong
 
 
 class ItemCreate(ItemBase):
@@ -14,24 +33,7 @@ class ItemCreate(ItemBase):
 
 
 class Item(ItemBase):
-    id: int
-
-    class Config:
-        orm_mode = True
-
-
-class POIBase(BaseModel):
-    title: str
-    description: str | None = None
-    position: LatLong
-
-
-class POICreate(POIBase):
-    pass
-
-
-class POI(POIBase):
-    id: int
+    id: UUID
 
     class Config:
         orm_mode = True
