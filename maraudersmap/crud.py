@@ -9,12 +9,23 @@ def get_items(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Item).offset(skip).limit(limit).all()
 
 
+def get_active_quests(db: Session, user_id: UUID, skip: int = 0, limit: int = 100):
+    return (
+        db.query(models.QuestParticipation)
+        .where(
+            models.QuestParticipation.user_id == user_id
+            and models.QuestParticipation.status == 1
+        )
+        .all()
+    )
+
+
 def get_item_ownerships(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.ItemOwnership).offset(skip).limit(limit).all()
 
 
-def get_item_ownership(db: Session, itemOwnershipId: UUID):
-    return db.query(models.ItemOwnership).get(itemOwnershipId)
+def get_item_ownership(db: Session, item_ownership_id: UUID):
+    return db.query(models.ItemOwnership).get(item_ownership_id)
 
 
 def create_item(db: Session, item: schemas.ItemCreate):

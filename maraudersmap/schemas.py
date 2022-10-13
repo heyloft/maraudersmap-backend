@@ -53,3 +53,20 @@ class ItemOwnership(ItemOwnershipBase):
 class ItemOwnershipCreate(ItemOwnershipBase):
     owner_id: UUID = Field(foreign_key="user.id")
     item_id: UUID = Field(foreign_key="item.id")
+
+
+class QuestBase(OrmBase):
+    title: str
+
+
+class Quest(QuestBase):
+    id: UUID
+
+
+class QuestParticipationBase(OrmBase):
+    status: int
+
+
+class QuestParticipation(QuestParticipationBase):
+    quest: Quest
+    user: User

@@ -36,6 +36,14 @@ def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return items
 
 
+@app.get("/activeQuests/{user_id}", response_model=list[schemas.QuestParticipation])
+def read_active_quests(
+    user_id: UUID, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
+):
+    active_quests = crud.get_active_quests(db, user_id, skip=skip, limit=limit)
+    return active_quests
+
+
 @app.get("/itemOwnerships/", response_model=list[schemas.ItemOwnership])
 def read_item_ownerships(
     skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
@@ -44,9 +52,9 @@ def read_item_ownerships(
     return item_ownerships
 
 
-@app.get("/itemOwnerships/{itemOwnershipId}", response_model=schemas.ItemOwnership)
-def read_item_ownership(itemOwnershipId: UUID, db: Session = Depends(get_db)):
-    item_ownership = crud.get_item_ownership(db, itemOwnershipId=itemOwnershipId)
+@app.get("/itemOwnerships/{item_ownership_id}", response_model=schemas.ItemOwnership)
+def read_item_ownership(item_ownership_id: UUID, db: Session = Depends(get_db)):
+    item_ownership = crud.get_item_ownership(db, item_ownership_id=item_ownership_id)
     return item_ownership
 
 
