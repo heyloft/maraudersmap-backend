@@ -115,6 +115,7 @@ class User(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
     username = Column(String)
+    items = relationship("ItemOwnership", back_populates="owners")
 
 
 class ItemOwnership(Base):
@@ -124,6 +125,8 @@ class ItemOwnership(Base):
     obtained_at = Column(DateTime, default=datetime.now)
     item_id = Column(UUID(as_uuid=True), ForeignKey("items.id"))
     item = relationship("Item", back_populates="ownerships")
+    owner_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    owner = relationship("User", back_populates="items")
 
 
 class QuestParticipation(Base):
