@@ -1,11 +1,19 @@
+from __future__ import annotations
+
+from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
-from maraudersmap.extra_types import LatLong
+from maraudersmap.models import ItemType
 
 
-class UserBase(BaseModel):
+class OrmBase(BaseModel):
+    class Config:
+        orm_mode = True
+
+
+class UserBase(OrmBase):
     username: str
 
 
@@ -15,17 +23,13 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: UUID
-    location: LatLong | None = None
-
-    class Config:
-        orm_mode = True
 
 
-class ItemBase(BaseModel):
+class ItemBase(OrmBase):
     title: str
     description: str | None = None
-    collectible: bool
-    location: LatLong
+    item_type: ItemType
+    icon: str
 
 
 class ItemCreate(ItemBase):
@@ -35,5 +39,17 @@ class ItemCreate(ItemBase):
 class Item(ItemBase):
     id: UUID
 
-    class Config:
-        orm_mode = True
+
+class ItemOwnershipBase(OrmBase):
+    obtained_at: datetime
+
+
+class ItemOwnership(ItemOwnershipBase):
+    id: UUID
+    item: ItemBase
+    owner: UserBase
+
+
+class ItemOwnershipCreate(ItemOwnershipBase):
+    owner_id: UUID = Field(foreign_key="user.id")
+    item_id: UUID = Field(foreign_key="item.id")

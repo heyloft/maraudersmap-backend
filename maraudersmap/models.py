@@ -115,7 +115,7 @@ class User(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
     username = Column(String)
-    items = relationship("ItemOwnership", back_populates="owners")
+    items = relationship("ItemOwnership", back_populates="owner")
 
 
 class ItemOwnership(Base):
