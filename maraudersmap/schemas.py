@@ -37,20 +37,3 @@ class Item(ItemBase):
 
     class Config:
         orm_mode = True
-
-
-class POIBase(BaseModel):
-    title: str
-    description: str | None = None
-    position: LatLong
-
-
-class POICreate(POIBase):
-    pass
-
-
-class POI(POIBase):
-    id: UUID
-
-    class Config:
-        orm_mode = True
