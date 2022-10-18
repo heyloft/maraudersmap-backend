@@ -23,7 +23,7 @@ poetry install
 ```
 > if Poetry starts complaining about `psycopg2-binary`, simply follow the next step to enter the shell and run `pip install` manually
 > ```
-> pip install psycopg2-binary
+> pip install psycopg2-binary==2.9.3
 > ```
 3. Enter Poetry virtual environment (venv)
 ```
