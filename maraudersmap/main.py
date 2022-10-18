@@ -73,3 +73,10 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 @app.post("/quest/", response_model=schemas.Quest)
 def create_quest(quest: schemas.QuestCreate, db: Session = Depends(get_db)):
     return crud.create_quest(db=db, quest=quest)
+
+
+@app.post("/questdependency/", response_model=schemas.QuestDependencyBase)
+def create_quest_dependency(
+    quest_dependency: schemas.QuestDependencyCreate, db: Session = Depends(get_db)
+):
+    return crud.create_quest_dependency(db=db, quest_dependency=quest_dependency)

@@ -58,3 +58,13 @@ def create_quest(db: Session, quest: schemas.QuestCreate):
     db.commit()
     db.refresh(db_quest)
     return db_quest
+
+
+def create_quest_dependency(
+    db: Session, quest_dependency: schemas.QuestDependencyCreate
+):
+    db_quest_dep = models.QuestDependency(**quest_dependency.dict())
+    db.add(db_quest_dep)
+    db.commit()
+    db.refresh(db_quest_dep)
+    return db_quest_dep
