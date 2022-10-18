@@ -70,6 +70,10 @@ def create_event(db: Session, event: schemas.EventCreate):
     return db_event
 
 
+def get_events(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Event).offset(skip).limit(limit).all()
+
+
 def create_item_ownership(db: Session, item_ownership: schemas.ItemOwnershipCreate):
     db_item_ownership = models.ItemOwnership(**item_ownership.dict())
     db.add(db_item_ownership)

@@ -30,6 +30,12 @@ def create_item(item: schemas.ItemCreate, db: Session = Depends(get_db)):
     return crud.create_item(db=db, item=item)
 
 
+@app.get("/events/", response_model=list[schemas.Event])
+def read_events(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    events = crud.get_events(db, skip=skip, limit=limit)
+    return events
+
+
 @app.post("/events/", response_model=schemas.Event)
 def create_event(event: schemas.EventCreate, db: Session = Depends(get_db)):
     return crud.create_event(db=db, event=event)

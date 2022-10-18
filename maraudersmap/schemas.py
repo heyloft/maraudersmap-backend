@@ -15,7 +15,8 @@ class OrmBase(BaseModel):
 
 
 class EventBase(OrmBase):
-    pass
+    active_from: datetime
+    active_to: datetime
 
 
 class Event(EventBase):
@@ -23,8 +24,7 @@ class Event(EventBase):
 
 
 class EventCreate(EventBase):
-    active_from: datetime
-    active_to: datetime
+    pass
 
 
 class UserBase(OrmBase):
