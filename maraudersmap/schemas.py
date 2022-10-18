@@ -94,6 +94,7 @@ class QuestBase(OrmBase):
     active_from: datetime
     active_to: datetime | None = None
     unlock_method: UnlockMethod
+    location: LatLong
 
 
 class QuestCreate(QuestBase):
