@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import List
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -103,21 +102,7 @@ class QuestCreate(QuestBase):
 
 class Quest(QuestBase):
     id: UUID
-    items: List[ItemBase]
-    this_depends_on: List[QuestDependencyBase]
-    depend_on_this: List[QuestDependencyBase]
-
-    class Config:
-        orm_mode = True
-
-
-class QuestDependencyBase(OrmBase):
-    quest_to_finish_before_id: UUID = Field(foreign_key="quest_to_finish_before_id")
-    quest_to_finish_after_id: UUID = Field(foreign_key="quest_to_finish_after_id")
-
-
-class QuestDependencyCreate(QuestDependencyBase):
-    pass
+    location: LatLong
 
 
 class QuestParticipationBase(OrmBase):
@@ -132,3 +117,12 @@ class QuestParticipation(QuestParticipationBase):
 class QuestParticipationCreate(QuestParticipationBase):
     quest_id: UUID
     user_id: UUID
+
+
+class QuestDependencyBase(OrmBase):
+    quest_to_finish_before_id: UUID = Field(foreign_key="quest_to_finish_before_id")
+    quest_to_finish_after_id: UUID = Field(foreign_key="quest_to_finish_after_id")
+
+
+class QuestDependencyCreate(QuestDependencyBase):
+    pass

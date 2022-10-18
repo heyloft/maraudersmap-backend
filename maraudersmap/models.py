@@ -126,6 +126,7 @@ class User(Base):
     username = Column(String, unique=True)
     items = relationship("ItemOwnership", back_populates="owner")
     quest_participations = relationship("QuestParticipation", back_populates="user")
+    event_participations = relationship("EventParticipation", back_populates="user")
 
 
 class ItemOwnership(Base):
@@ -169,6 +170,7 @@ class Event(Base):
     active_from = Column(DateTime, default=datetime.now)
     active_to = Column(DateTime, nullable=True)
     quests = relationship("Quest", back_populates="event")
+    event_participations = relationship("EventParticipation", back_populates="event")
 
 
 class EventParticipation(Base):
@@ -180,10 +182,12 @@ class EventParticipation(Base):
         primary_key=True,
         index=True,
     )
+    user = relationship("User", back_populates="event_participations")
     event_id = Column(
         UUID(as_uuid=True),
         ForeignKey("events.id"),
         primary_key=True,
         index=True,
     )
+    event = relationship("Event", back_populates="event_participations")
     status = Column(Integer)
