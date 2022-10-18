@@ -45,6 +45,11 @@ def create_item_ownership(db: Session, item_ownership: schemas.ItemOwnershipCrea
 
 
 def create_user(db: Session, user: schemas.UserCreate):
+    user_check = (
+        db.query(models.User).filter(models.User.username == user.username).first()
+    )
+    if user_check is not None:
+        return None
     db_user = models.User(**user.dict())
     db.add(db_user)
     db.commit()

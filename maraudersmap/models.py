@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from enum import Enum, auto
+from enum import Enum, auto, unique
 
 from sqlalchemy import Column, DateTime
 from sqlalchemy import Enum as SQLEnum
@@ -114,7 +114,7 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
-    username = Column(String)
+    username = Column(String, unique=True)
     items = relationship("ItemOwnership", back_populates="owner")
 
 

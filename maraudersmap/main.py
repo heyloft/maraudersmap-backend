@@ -67,7 +67,10 @@ def create_item_ownership(
 
 @app.post("/user/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    return crud.create_user(db=db, user=user)
+    create_user = crud.create_user(db=db, user=user)
+    if create_user is None:
+        raise HTTPException(status_code=404, detail="Username is already in use")
+    return create_user
 
 
 @app.get("/users/", response_model=list[schemas.User])
