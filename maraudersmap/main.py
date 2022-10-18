@@ -51,7 +51,7 @@ def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 
 
 @app.get(
-    "/event/{event_id}/user/{user_id}/activeQuests",
+    "/events/{event_id}/user/{user_id}/activeQuests",
     response_model=list[schemas.QuestParticipation],
 )
 def read_active_quests(
@@ -68,7 +68,7 @@ def read_active_quests(
 
 
 @app.get(
-    "/event/{event_id}/user/{user_id}/unstartedQuests",
+    "/events/{event_id}/user/{user_id}/unstartedQuests",
     response_model=list[schemas.QuestParticipation],
 )
 def read_unstarted_quests(event_id: UUID, user_id: UUID, db: Session = Depends(get_db)):
@@ -90,14 +90,14 @@ def read_item_ownership(item_ownership_id: UUID, db: Session = Depends(get_db)):
     return item_ownership
 
 
-@app.post("/itemOwnership/", response_model=schemas.ItemOwnership)
+@app.post("/itemOwnerships/", response_model=schemas.ItemOwnership)
 def create_item_ownership(
     item_ownership: schemas.ItemOwnershipCreate, db: Session = Depends(get_db)
 ):
     return crud.create_item_ownership(db=db, item_ownership=item_ownership)
 
 
-@app.post("/user/", response_model=schemas.User)
+@app.post("/users/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     create_user = crud.create_user(db=db, user=user)
     if create_user is None:
@@ -111,7 +111,7 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return users
 
 
-@app.get("/user/{username}", response_model=schemas.User)
+@app.get("/users/{username}", response_model=schemas.User)
 def read_user(username: str, db: Session = Depends(get_db)):
     user = crud.get_user(db=db, username=username)
     if user is None:
@@ -119,12 +119,12 @@ def read_user(username: str, db: Session = Depends(get_db)):
     return user
 
 
-@app.post("/quest/", response_model=schemas.Quest)
+@app.post("/quests/", response_model=schemas.Quest)
 def create_quest(quest: schemas.QuestCreate, db: Session = Depends(get_db)):
     return crud.create_quest(db=db, quest=quest)
 
 
-@app.post("/questdependency/", response_model=schemas.QuestDependencyBase)
+@app.post("/questDependencies/", response_model=schemas.QuestDependencyBase)
 def create_quest_dependency(
     quest_dependency: schemas.QuestDependencyCreate, db: Session = Depends(get_db)
 ):
