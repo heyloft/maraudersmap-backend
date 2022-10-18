@@ -14,14 +14,12 @@ def get_active_quests(
 ):
     return (
         db.query(models.QuestParticipation)
-        # .join(models.QuestParticipation.quest)
-        # .options(lazyload(models.QuestParticipation.quest))
         .where(
-            models.QuestParticipation.quest.event_id
-            == event_id
-            # and models.QuestParticipation.user_id == user_id
-            # and models.QuestParticipation.status == 1
-        ).all()
+            models.QuestParticipation.quest.has(event_id=event_id),
+            models.QuestParticipation.user_id == user_id,
+            models.QuestParticipation.status == models.QuestStatus.ACTIVE,
+        )
+        .all()
     )
 
 
@@ -31,9 +29,9 @@ def get_unstarted_quests(
     return (
         db.query(models.QuestParticipation)
         .where(
-            models.QuestParticipation.quest.event_id == event_id
-            and models.QuestParticipation.user_id == user_id
-            and models.QuestParticipation.status == 2
+            models.QuestParticipation.quest.has(event_id=event_id),
+            models.QuestParticipation.user_id == user_id,
+            models.QuestParticipation.status == models.QuestStatus.UNSTARTED,
         )
         .all()
     )
@@ -82,11 +80,6 @@ def create_quest_participation(
 
 
 def create_user(db: Session, user: schemas.UserCreate):
-    user_check = (
-        db.query(models.User).filter(models.User.username == user.username).first()
-    )
-    if user_check is not None:
-        return None
     db_user = models.User(**user.dict())
     db.add(db_user)
     db.commit()
@@ -108,13 +101,3 @@ def create_quest(db: Session, quest: schemas.QuestCreate):
     db.commit()
     db.refresh(db_quest)
     return db_quest
-
-
-def create_quest_dependency(
-    db: Session, quest_dependency: schemas.QuestDependencyCreate
-):
-    db_quest_dep = models.QuestDependency(**quest_dependency.dict())
-    db.add(db_quest_dep)
-    db.commit()
-    db.refresh(db_quest_dep)
-    return db_quest_dep

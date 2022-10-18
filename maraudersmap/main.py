@@ -68,7 +68,8 @@ def read_active_quests(
 
 
 @app.get(
-    "/event/{event_id}/user/{user_id}/unstartedQuests", response_model=schemas.Quest
+    "/event/{event_id}/user/{user_id}/unstartedQuests",
+    response_model=list[schemas.QuestParticipation],
 )
 def read_unstarted_quests(event_id: UUID, user_id: UUID, db: Session = Depends(get_db)):
     unstarted_quests = crud.get_unstarted_quests(db, event_id, user_id)
