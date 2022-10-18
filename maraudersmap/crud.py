@@ -149,7 +149,6 @@ def create_event_participation(
             user_id=event_participation.user_id,
         )
         db.add(quest_participation)
-        print("quest_participation: {}".format(quest_participation))
 
     db.commit()
     db.refresh(db_event_participation)
