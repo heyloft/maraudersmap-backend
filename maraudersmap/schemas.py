@@ -120,6 +120,10 @@ class QuestParticipationCreate(QuestParticipationBase):
     user_id: UUID
 
 
+class QuestParticipationUpdate(QuestParticipationBase):
+    pass
+
+
 class QuestDependencyBase(OrmBase):
     quest_to_finish_before_id: UUID = Field(foreign_key="quest_to_finish_before_id")
     quest_to_finish_after_id: UUID = Field(foreign_key="quest_to_finish_after_id")
@@ -141,3 +145,7 @@ class EventParticipationCreate(EventParticipationBase):
 class EventParticipation(EventParticipationBase):
     event: Event
     user: User
+
+
+class EventParticipationUpdate(EventParticipationBase):
+    pass

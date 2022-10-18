@@ -50,6 +50,24 @@ def create_quest_participation(
     )
 
 
+@app.put(
+    "/questParticipations/{user_id}/{quest_id}",
+    response_model=schemas.QuestParticipation,
+)
+def update_quest_participation(
+    user_id: UUID,
+    quest_id: UUID,
+    quest_participation: schemas.QuestParticipationUpdate,
+    db: Session = Depends(get_db),
+):
+    return crud.update_quest_participation(
+        db=db,
+        user_id=user_id,
+        quest_id=quest_id,
+        quest_participation=quest_participation,
+    )
+
+
 @app.get("/items/", response_model=list[schemas.Item])
 def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     items = crud.get_items(db, skip=skip, limit=limit)
@@ -117,9 +135,9 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return users
 
 
-@app.get("/users/{username}", response_model=schemas.User)
-def read_user(username: str, db: Session = Depends(get_db)):
-    user = crud.get_user(db=db, username=username)
+@app.get("/users/{user_id}", response_model=schemas.User)
+def read_user(user_id: UUID, db: Session = Depends(get_db)):
+    user = crud.get_user(db=db, user_id=user_id)
     if user is None:
         raise HTTPException(status_code=404, detail="Item not found")
     return user
@@ -137,10 +155,28 @@ def create_quest_dependency(
     return crud.create_quest_dependency(db=db, quest_dependency=quest_dependency)
 
 
-@app.post("/eventParticipation/", response_model=schemas.EventParticipationCreate)
+@app.post("/eventParticipations/", response_model=schemas.EventParticipationCreate)
 def create_event_participation(
     event_participation: schemas.EventParticipationCreate, db: Session = Depends(get_db)
 ):
     return crud.create_event_participation(
         db=db, event_participation=event_participation
+    )
+
+
+@app.put(
+    "/eventParticipations/{user_id}/{event_id}",
+    response_model=schemas.EventParticipation,
+)
+def update_quest_participation(
+    user_id: UUID,
+    event_id: UUID,
+    event_participation: schemas.EventParticipationUpdate,
+    db: Session = Depends(get_db),
+):
+    return crud.update_event_participation(
+        db=db,
+        user_id=user_id,
+        event_id=event_id,
+        event_participation=event_participation,
     )

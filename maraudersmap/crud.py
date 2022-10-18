@@ -92,6 +92,25 @@ def create_quest_participation(
     return db_quest_participation
 
 
+def update_quest_participation(
+    db: Session,
+    user_id: UUID,
+    quest_id: UUID,
+    quest_participation: schemas.QuestParticipationUpdate,
+):
+    db_quest_participation_query = db.query(models.QuestParticipation).filter(
+        models.QuestParticipation.user_id == user_id,
+        models.QuestParticipation.quest_id == quest_id,
+    )
+    if db_quest_participation_query.count() > 1:
+        raise Exception(
+            "Multiple QuestParticipation instances for the given primary key!"
+        )
+    db_quest_participation_query.update(quest_participation.dict())
+    db.commit()
+    return db_quest_participation_query.one()
+
+
 def create_user(db: Session, user: schemas.UserCreate):
     user_check = (
         db.query(models.User).filter(models.User.username == user.username).first()
@@ -153,3 +172,22 @@ def create_event_participation(
     db.commit()
     db.refresh(db_event_participation)
     return db_event_participation
+
+
+def update_event_participation(
+    db: Session,
+    user_id: UUID,
+    event_id: UUID,
+    event_participation: schemas.EventParticipation,
+):
+    db_event_participation_query = db.query(models.EventParticipation).filter(
+        models.EventParticipation.user_id == user_id,
+        models.EventParticipation.event_id == event_id,
+    )
+    if db_event_participation_query.count() > 1:
+        raise Exception(
+            "Multiple EventParticipation instances for the given primary key!"
+        )
+    db_event_participation_query.update(event_participation.dict())
+    db.commit()
+    return db_event_participation_query.one()
