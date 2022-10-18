@@ -95,15 +95,15 @@ class QuestBase(OrmBase):
     active_to: datetime | None = None
     unlock_method: UnlockMethod
     location: LatLong
+    event_id: UUID
 
 
 class QuestCreate(QuestBase):
-    event_id: UUID
+    pass
 
 
 class Quest(QuestBase):
     id: UUID
-    location: LatLong
 
 
 class QuestParticipationBase(OrmBase):
