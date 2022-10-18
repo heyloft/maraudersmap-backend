@@ -9,13 +9,20 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from maraudersmap.database.base_class import Base
-from maraudersmap.extra_types import LatLongColumnType
+from maraudersmap.extra_types import LatLong, LatLongColumnType
 
 
 class ItemType(Enum):
     COLLECTIBLE = auto()
     KEY = auto()
     POI = auto()
+
+
+class QuestStatus(Enum):
+    HIDDEN = auto()
+    UNSTARTED = auto()
+    ACTIVE = auto()
+    FINISHED = auto()
 
 
 class Item(Base):
@@ -47,7 +54,9 @@ class Quest(Base):
     active_from = Column(DateTime, default=datetime.now)
     active_to = Column(DateTime, nullable=True)
     unlock_method = Column(SQLEnum(UnlockMethod))
+    location = Column(LatLongColumnType)
     items = relationship("QuestItem", back_populates="quest")
+    quest_participations = relationship("QuestParticipation", back_populates="quest")
     this_depends_on = relationship(
         "QuestDependency",
         foreign_keys="QuestDependency.quest_to_finish_after_id",
@@ -116,6 +125,7 @@ class User(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
     username = Column(String, unique=True)
     items = relationship("ItemOwnership", back_populates="owner")
+    quest_participations = relationship("QuestParticipation", back_populates="user")
 
 
 class ItemOwnership(Base):
@@ -132,20 +142,24 @@ class ItemOwnership(Base):
 class QuestParticipation(Base):
     __tablename__ = "questParticipations"
 
-    user_id = Column(
+    user_id: UUID = Column(
         UUID(as_uuid=True),
         ForeignKey("users.id"),
         primary_key=True,
         index=True,
     )
-    quest_id = Column(
+    user: User = relationship("User", back_populates="quest_participations")
+    quest_id: UUID = Column(
         UUID(as_uuid=True),
         ForeignKey("quests.id"),
         primary_key=True,
         index=True,
     )
-    status = Column(Integer)
-    location = Column(LatLongColumnType, nullable=True)
+    quest: Quest = relationship(
+        "Quest", back_populates="quest_participations", lazy="joined"
+    )
+    status: QuestStatus = Column(SQLEnum(QuestStatus))
+    location: LatLongColumnType = Column(LatLongColumnType, nullable=True)
 
 
 class Event(Base):

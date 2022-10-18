@@ -30,18 +30,49 @@ def create_item(item: schemas.ItemCreate, db: Session = Depends(get_db)):
     return crud.create_item(db=db, item=item)
 
 
+@app.post("/events/", response_model=schemas.Event)
+def create_event(event: schemas.EventCreate, db: Session = Depends(get_db)):
+    return crud.create_event(db=db, event=event)
+
+
+@app.post("/questParticipations/", response_model=schemas.QuestParticipation)
+def create_quest_participation(
+    quest_participation: schemas.QuestParticipationCreate, db: Session = Depends(get_db)
+):
+    return crud.create_quest_participation(
+        db=db, quest_participation=quest_participation
+    )
+
+
 @app.get("/items/", response_model=list[schemas.Item])
 def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     items = crud.get_items(db, skip=skip, limit=limit)
     return items
 
 
-@app.get("/activeQuests/{user_id}", response_model=list[schemas.QuestParticipation])
+@app.get(
+    "/event/{event_id}/user/{user_id}/activeQuests",
+    response_model=list[schemas.QuestParticipation],
+)
 def read_active_quests(
-    user_id: UUID, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
+    event_id: UUID,
+    user_id: UUID,
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
 ):
-    active_quests = crud.get_active_quests(db, user_id, skip=skip, limit=limit)
+    active_quests = crud.get_active_quests(
+        db, event_id, user_id, skip=skip, limit=limit
+    )
     return active_quests
+
+
+@app.get(
+    "/event/{event_id}/user/{user_id}/unstartedQuests", response_model=schemas.Quest
+)
+def read_unstarted_quests(event_id: UUID, user_id: UUID, db: Session = Depends(get_db)):
+    unstarted_quests = crud.get_unstarted_quests(db, event_id, user_id)
+    return unstarted_quests
 
 
 @app.get("/itemOwnerships/", response_model=list[schemas.ItemOwnership])

@@ -7,12 +7,25 @@ from uuid import UUID
 from pydantic import BaseModel, Field
 
 from maraudersmap.extra_types import LatLong
-from maraudersmap.models import ItemType, UnlockMethod
+from maraudersmap.models import ItemType, QuestStatus, UnlockMethod
 
 
 class OrmBase(BaseModel):
     class Config:
         orm_mode = True
+
+
+class EventBase(OrmBase):
+    pass
+
+
+class Event(EventBase):
+    id: UUID
+
+
+class EventCreate(EventBase):
+    active_from: datetime
+    active_to: datetime
 
 
 class UserBase(OrmBase):
@@ -85,7 +98,7 @@ class QuestBase(OrmBase):
 
 
 class QuestCreate(QuestBase):
-    pass
+    event_id: UUID
 
 
 class Quest(QuestBase):
@@ -108,9 +121,14 @@ class QuestDependencyCreate(QuestDependencyBase):
 
 
 class QuestParticipationBase(OrmBase):
-    status: int
+    status: QuestStatus
 
 
 class QuestParticipation(QuestParticipationBase):
     quest: Quest
     user: User
+
+
+class QuestParticipationCreate(QuestParticipationBase):
+    quest_id: UUID
+    user_id: UUID
