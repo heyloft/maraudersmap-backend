@@ -129,3 +129,28 @@ def create_quest_dependency(
     db.commit()
     db.refresh(db_quest_dep)
     return db_quest_dep
+
+
+def create_event_participation(
+    db: Session, event_participation: schemas.EventParticipationCreate
+):
+    db_event_participation = models.EventParticipation(**event_participation.dict())
+    db.add(db_event_participation)
+    db_quests = (
+        db.query(models.Event)
+        .where(models.Event.id == event_participation.event_id)
+        .first()
+        .quests
+    )
+    for quest in db_quests:
+        quest_participation = models.QuestParticipation(
+            status=models.QuestStatus.UNSTARTED,
+            quest_id=quest.id,
+            user_id=event_participation.user_id,
+        )
+        db.add(quest_participation)
+        print("quest_participation: {}".format(quest_participation))
+
+    db.commit()
+    db.refresh(db_event_participation)
+    return db_event_participation

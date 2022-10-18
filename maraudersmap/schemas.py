@@ -127,3 +127,17 @@ class QuestDependencyBase(OrmBase):
 
 class QuestDependencyCreate(QuestDependencyBase):
     pass
+
+
+class EventParticipationBase(OrmBase):
+    status: int
+
+
+class EventParticipationCreate(EventParticipationBase):
+    event_id: UUID
+    user_id: UUID
+
+
+class EventParticipation(EventParticipationBase):
+    event: Event
+    user: User

@@ -135,3 +135,12 @@ def create_quest_dependency(
     quest_dependency: schemas.QuestDependencyCreate, db: Session = Depends(get_db)
 ):
     return crud.create_quest_dependency(db=db, quest_dependency=quest_dependency)
+
+
+@app.post("/eventParticipation/", response_model=schemas.EventParticipationCreate)
+def create_event_participation(
+    event_participation: schemas.EventParticipationCreate, db: Session = Depends(get_db)
+):
+    return crud.create_event_participation(
+        db=db, event_participation=event_participation
+    )

@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 import uuid
 from datetime import datetime
 from enum import Enum, auto
+from typing import List
 
 from sqlalchemy import Column, DateTime
 from sqlalchemy import Enum as SQLEnum
@@ -166,28 +169,32 @@ class QuestParticipation(Base):
 class Event(Base):
     __tablename__ = "events"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
-    active_from = Column(DateTime, default=datetime.now)
-    active_to = Column(DateTime, nullable=True)
-    quests = relationship("Quest", back_populates="event")
-    event_participations = relationship("EventParticipation", back_populates="event")
+    id: UUID = Column(
+        UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4
+    )
+    active_from: datetime = Column(DateTime, default=datetime.now)
+    active_to: datetime = Column(DateTime, nullable=True)
+    quests: List[Quest] = relationship("Quest", back_populates="event")
+    event_participations: List[EventParticipation] = relationship(
+        "EventParticipation", back_populates="event"
+    )
 
 
 class EventParticipation(Base):
     __tablename__ = "eventParticipation"
 
-    user_id = Column(
+    user_id: UUID = Column(
         UUID(as_uuid=True),
         ForeignKey("users.id"),
         primary_key=True,
         index=True,
     )
-    user = relationship("User", back_populates="event_participations")
-    event_id = Column(
+    user: User = relationship("User", back_populates="event_participations")
+    event_id: UUID = Column(
         UUID(as_uuid=True),
         ForeignKey("events.id"),
         primary_key=True,
         index=True,
     )
-    event = relationship("Event", back_populates="event_participations")
-    status = Column(Integer)
+    event: Event = relationship("Event", back_populates="event_participations")
+    status: int = Column(Integer)
