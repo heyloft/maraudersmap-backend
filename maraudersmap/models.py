@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from enum import Enum, auto, unique
+from enum import Enum, auto
 
 from sqlalchemy import Column, DateTime
 from sqlalchemy import Enum as SQLEnum
@@ -9,7 +9,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from maraudersmap.database.base_class import Base
-from maraudersmap.extra_types import LatLong, LatLongColumnType
+from maraudersmap.extra_types import LatLongColumnType
 
 
 class ItemType(Enum):
@@ -180,7 +180,7 @@ class EventParticipation(Base):
         primary_key=True,
         index=True,
     )
-    quest_id = Column(
+    event_id = Column(
         UUID(as_uuid=True),
         ForeignKey("events.id"),
         primary_key=True,

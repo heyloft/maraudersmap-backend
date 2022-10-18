@@ -1,17 +1,16 @@
 """make username unique
 
 Revision ID: 2edb3ecd6df9
-Revises: 256308233b41
+Revises: c0fc943b42f7
 Create Date: 2022-10-18 11:24:02.279480
 
 """
 from alembic import op
-import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
 revision = "2edb3ecd6df9"
-down_revision = "256308233b41"
+down_revision = "c0fc943b42f7"
 branch_labels = None
 depends_on = None
 
