@@ -52,6 +52,14 @@ def create_user(db: Session, user: schemas.UserCreate):
     return db_user
 
 
+def get_users(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.User).offset(skip).limit(limit).all()
+
+
+def get_user(db: Session, user_id: UUID):
+    return db.query(models.User).filter(models.User.id == user_id).first()
+
+
 def create_quest(db: Session, quest: schemas.QuestCreate):
     db_quest = models.Quest(**quest.dict())
     db.add(db_quest)

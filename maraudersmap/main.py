@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.responses import PlainTextResponse
 from sqlalchemy.orm import Session
 
@@ -68,6 +68,20 @@ def create_item_ownership(
 @app.post("/user/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return crud.create_user(db=db, user=user)
+
+
+@app.get("/users/", response_model=list[schemas.User])
+def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    users = crud.get_users(db=db, skip=skip, limit=limit)
+    return users
+
+
+@app.get("/user/{user_id}", response_model=schemas.User)
+def read_user(user_id: UUID, db: Session = Depends(get_db)):
+    user = crud.get_user(db=db, user_id=user_id)
+    if user is None:
+        raise HTTPException(status_code=404, detail="Item not found")
+    return user
 
 
 @app.post("/quest/", response_model=schemas.Quest)
