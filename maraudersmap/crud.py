@@ -51,7 +51,7 @@ def get_item_ownerships(db: Session, skip: int = 0, limit: int = 100):
 
 
 def get_item_ownership(db: Session, item_ownership_id: UUID):
-    return db.query(models.ItemOwnership).get(item_ownership_id)
+    return db.query(models.ItemOwnership).filter_by(id=item_ownership_id).one_or_none()
 
 
 def create_item(db: Session, item: schemas.ItemCreate):
@@ -129,7 +129,11 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 
 
 def get_user(db: Session, user_id: UUID):
-    return db.query(models.User).filter(models.User.id == user_id).first()
+    return db.query(models.User).filter_by(id=user_id).one_or_none()
+
+
+def get_user_by_username(db: Session, user_username: str):
+    return db.query(models.User).filter_by(username=user_username).one_or_none()
 
 
 def create_quest(db: Session, quest: schemas.QuestCreate):
