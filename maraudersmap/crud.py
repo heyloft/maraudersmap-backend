@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from sqlalchemy.orm import Session, joinedload, lazyload
+from sqlalchemy.orm import Session
 
 from . import models, schemas
 
@@ -12,27 +12,36 @@ def get_items(db: Session, skip: int = 0, limit: int = 100):
 def get_active_quests(
     db: Session, event_id: UUID, user_id: UUID, skip: int = 0, limit: int = 100
 ):
-    return (
-        db.query(models.QuestParticipation)
-        .where(
-            models.QuestParticipation.quest.has(event_id=event_id),
-            models.QuestParticipation.user_id == user_id,
-            models.QuestParticipation.status == models.QuestStatus.ACTIVE,
-        )
-        .all()
+    return get_quests_by_status(
+        db, event_id, user_id, models.QuestStatus.ACTIVE, skip, limit
     )
 
 
 def get_unstarted_quests(
     db: Session, event_id: UUID, user_id: UUID, skip: int = 0, limit: int = 100
 ):
+    return get_quests_by_status(
+        db, event_id, user_id, models.QuestStatus.UNSTARTED, skip, limit
+    )
+
+
+def get_quests_by_status(
+    db: Session,
+    event_id: UUID,
+    user_id: UUID,
+    status: models.QuestStatus,
+    skip: int = 0,
+    limit: int = 100,
+):
     return (
         db.query(models.QuestParticipation)
         .where(
             models.QuestParticipation.quest.has(event_id=event_id),
             models.QuestParticipation.user_id == user_id,
-            models.QuestParticipation.status == models.QuestStatus.UNSTARTED,
+            models.QuestParticipation.status == status,
         )
+        .offset(skip)
+        .limit(limit)
         .all()
     )
 
@@ -80,6 +89,11 @@ def create_quest_participation(
 
 
 def create_user(db: Session, user: schemas.UserCreate):
+    user_check = (
+        db.query(models.User).filter(models.User.username == user.username).first()
+    )
+    if user_check is not None:
+        return None
     db_user = models.User(**user.dict())
     db.add(db_user)
     db.commit()
@@ -91,8 +105,8 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.User).offset(skip).limit(limit).all()
 
 
-def get_user(db: Session, username: str):
-    return db.query(models.User).filter(models.User.username == username).first()
+def get_user(db: Session, user_id: UUID):
+    return db.query(models.User).filter(models.User.id == user_id).first()
 
 
 def create_quest(db: Session, quest: schemas.QuestCreate):
@@ -101,3 +115,13 @@ def create_quest(db: Session, quest: schemas.QuestCreate):
     db.commit()
     db.refresh(db_quest)
     return db_quest
+
+
+def create_quest_dependency(
+    db: Session, quest_dependency: schemas.QuestDependencyCreate
+):
+    db_quest_dep = models.QuestDependency(**quest_dependency.dict())
+    db.add(db_quest_dep)
+    db.commit()
+    db.refresh(db_quest_dep)
+    return db_quest_dep
