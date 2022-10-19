@@ -71,7 +71,7 @@ COPY public."itemOwnerships" (id, obtained_at, item_id, owner_id) FROM stdin;
 
 COPY public.quests (id, title, description, active_from, active_to, event_id, unlock_method, location) FROM stdin;
 8a369b29-f0c7-4e65-944a-6f754a13c3b4	Magic Journey	What will this journey bring?	2022-10-18 22:56:44.592	2023-02-18 22:56:44.592	cc0d3b66-3edf-4259-a5f4-09e1ee32ffd3	QR_CODE	{63.431322680001635,10.400775104320102}
-01c438c0-cc65-4823-9d90-f6a2997f6bb1	The forgotten flamingo	It's really pink!	2022-10-18 22:56:44.592	2023-02-18 22:56:44.592	cc0d3b66-3edf-4259-a5f4-09e1ee32ffd3	QR_CODE	{63.43138986156285,10.400792538678703}
+01c438c0-cc65-4823-9d90-f6a2997f6bb1	The forgotten flamingo	It is really pink!	2022-10-18 22:56:44.592	2023-02-18 22:56:44.592	cc0d3b66-3edf-4259-a5f4-09e1ee32ffd3	QR_CODE	{63.43138986156285,10.400792538678703}
 \.
 
 
@@ -95,9 +95,9 @@ COPY public."questItems" (id, quest_id, item_id, location, unlock_method) FROM s
 -- Data for Name: questParticipations; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public."questParticipations" (user_id, status, quest_id, location) FROM stdin;
-c7c99df4-c49e-4c44-8911-450e6774b3f6	UNSTARTED	8a369b29-f0c7-4e65-944a-6f754a13c3b4	\N
-c7c99df4-c49e-4c44-8911-450e6774b3f6	UNSTARTED	01c438c0-cc65-4823-9d90-f6a2997f6bb1	\N
+COPY public."questParticipations" (user_id, status, quest_id) FROM stdin;
+c7c99df4-c49e-4c44-8911-450e6774b3f6	UNSTARTED	8a369b29-f0c7-4e65-944a-6f754a13c3b4
+c7c99df4-c49e-4c44-8911-450e6774b3f6	UNSTARTED	01c438c0-cc65-4823-9d90-f6a2997f6bb1
 \.
 
 
