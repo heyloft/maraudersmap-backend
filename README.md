@@ -13,6 +13,14 @@
 
 > Assumes Python version `^3.10`
 
+A `make` command is provided to quickly setup a dev environment
+```
+make init
+```
+> check `Makefile` to see what it does
+
+Alternatively, do the following:
+
 1. Install [`Poetry`](https://python-poetry.org/) for Python package management. The following should work for Linux, macOS and Windows (WSL):
 ```
 curl -sSL https://install.python-poetry.org | python3 -
@@ -79,14 +87,22 @@ Valid:          True
 
 ## Start database
 A quick approach for setting up a PostgreSQL database is to run the official Docker image. Just make sure you have [installed Docker](https://docs.docker.com/get-docker/) first.
+
+A `make` command is available to initialize and start a database with Docker
 ```
-docker run -p 5432:5432 -e POSTGRES_PASSWORD=password -v maraudersmap_psql:/var/lib/postgresql/data postgres:14.5
+make db
+```
+> this command also [applies new migrations](#apply-migrations)
+
+Alternatively, run the following
+```
+docker run -p 5432:5432 -e POSTGRES_PASSWORD=password -v maraudersmap-data:/var/lib/postgresql/data --name maraudersmap-pg postgres:14.5
 ```
 > the above command might require `sudo`
 
 > you could choose any password for the database, but make sure to update the connection string accordingly
 
-> the above command creates a named volume `maraudersmap_psql`, which will persist the database data between image restarts
+> the above command creates a named volume `maraudersmap-data`, which will persist the database data between image restarts
 
 
 ## Run backend
@@ -101,12 +117,17 @@ cp base.env .env
 
 1. Make sure to [apply any new database migrations](#apply-migrations)
 2. Start server
-```bash
-cd maraudersmap
-uvicorn main:app --host 0.0.0.0 --reload
-```
-> must be run from `/maraudersmap` directory to recognize `.env`
-> using `--host 0.0.0.0` seems to be required for accessing the backend via the public IP address
+    ```
+    make api
+    ```
+    or manually with
+    ```bash
+    cd maraudersmap
+    uvicorn main:app --host 0.0.0.0 --reload
+    ```
+    > must be run from `/maraudersmap` directory to recognize `.env`
+
+    > using `--host 0.0.0.0` seems to be required for accessing the backend via the public IP address
 
 ## Database Migrations
 
@@ -126,4 +147,27 @@ alembic revision --autogenerate -m "<Some descriptive title>"
 A database can be upgraded to the latest version with the following command (inside `maraudersmap/`)
 ```
 alembic upgrade head
+```
+
+## Seed database
+> make sure the database is running
+
+Your database can be kickstarted by injecting some sample code provided in `seed.sql`. From project root, run
+```
+make seed
+```
+or
+```
+docker exec -i maraudersmap-pg /bin/bash -c "PGPASSWORD=password psql --username postgres postgres" < maraudersmap/database/seed.sql
+```
+> assumes names and passwords as given in `docker run` above.
+
+#### Update `seed.sql`
+If you want to add more data to the sample, simply dump your current database. From project root, run
+```
+make dump
+```
+or
+```
+docker exec -i maraudersmap-pg /bin/bash -c "PGPASSWORD=password pg_dump --username postgres postgres" > maraudersmap/database/seed.sql
 ```
