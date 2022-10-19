@@ -36,7 +36,6 @@ class Item(Base):
     title = Column(String)
     description = Column(String)
     icon = Column(String)
-    location = Column(LatLongColumnType, nullable=True)
     instances = relationship("QuestItem", back_populates="item")
     ownerships = relationship("ItemOwnership", back_populates="item")
 
@@ -129,6 +128,7 @@ class User(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
     username = Column(String, unique=True)
     items = relationship("ItemOwnership", back_populates="owner")
+    location: LatLongColumnType = Column(LatLongColumnType, nullable=True)
     quest_participations = relationship("QuestParticipation", back_populates="user")
     event_participations = relationship("EventParticipation", back_populates="user")
 
@@ -164,7 +164,6 @@ class QuestParticipation(Base):
         "Quest", back_populates="quest_participations", lazy="joined"
     )
     status: QuestStatus = Column(SQLEnum(QuestStatus))
-    location: LatLongColumnType = Column(LatLongColumnType, nullable=True)
 
 
 class Event(Base):
