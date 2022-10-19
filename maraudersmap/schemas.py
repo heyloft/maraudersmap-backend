@@ -71,22 +71,19 @@ class ItemOwnershipCreate(ItemOwnershipBase):
 
 
 class QuestItemBase(OrmBase):
-    item: Item
     location: LatLong
     unlock_method: UnlockMethod
 
 
 class QuestItemCreate(QuestItemBase):
-    pass
+    item_id: UUID
 
 
 class QuestItem(QuestItemBase):
     id: UUID
-    item: ItemBase
-    quest: QuestBase
-
-    class Config:
-        orm_mode = True
+    item: Item
+    quest_id: UUID
+    quest: Quest
 
 
 class QuestBase(OrmBase):
@@ -150,3 +147,6 @@ class EventParticipation(EventParticipationBase):
 
 class EventParticipationUpdate(EventParticipationBase):
     pass
+
+
+QuestItem.update_forward_refs()

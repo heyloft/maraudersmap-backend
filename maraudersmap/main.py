@@ -151,6 +151,20 @@ def read_user_by_username(username: str, db: Session = Depends(get_db)):
     return user
 
 
+@app.get("/quests/{quest_id}/items", response_model=list[schemas.QuestItem])
+def read_quest_items(
+    quest_id: UUID, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
+):
+    return crud.get_quest_items(db=db, quest_id=quest_id, skip=skip, limit=limit)
+
+
+@app.post("/quests/{quest_id}/items/", response_model=schemas.QuestItem)
+def create_quest_item(
+    quest_id: UUID, quest_item: schemas.QuestItemCreate, db: Session = Depends(get_db)
+):
+    return crud.create_quest_item(db=db, quest_id=quest_id, quest_item=quest_item)
+
+
 @app.post("/quests/", response_model=schemas.Quest)
 def create_quest(quest: schemas.QuestCreate, db: Session = Depends(get_db)):
     return crud.create_quest(db=db, quest=quest)
@@ -176,7 +190,7 @@ def create_event_participation(
     "/eventParticipations/{user_id}/{event_id}",
     response_model=schemas.EventParticipation,
 )
-def update_quest_participation(
+def update_event_participation(
     user_id: UUID,
     event_id: UUID,
     event_participation: schemas.EventParticipationUpdate,

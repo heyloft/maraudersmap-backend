@@ -46,6 +46,28 @@ def get_quests_by_status(
     )
 
 
+def get_quest_items(
+    db: Session, quest_id: UUID, skip: int = 0, limit: int = 100
+) -> list[models.QuestItem]:
+    return (
+        db.query(models.QuestItem)
+        .filter_by(quest_id=quest_id)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+
+def create_quest_item(
+    db: Session, quest_id: UUID, quest_item: schemas.QuestItemCreate
+) -> models.QuestItem:
+    db_quest_item = models.QuestItem(quest_id=quest_id, **quest_item.dict())
+    db.add(db_quest_item)
+    db.commit()
+    db.refresh(db_quest_item)
+    return db_quest_item
+
+
 def get_item_ownerships(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.ItemOwnership).offset(skip).limit(limit).all()
 
