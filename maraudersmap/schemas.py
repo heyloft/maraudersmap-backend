@@ -44,6 +44,7 @@ class ItemBase(OrmBase):
     item_type: ItemType
     description: str | None = None
     icon: str
+    location: LatLong | None = None
 
 
 class ItemCreate(ItemBase):

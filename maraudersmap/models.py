@@ -36,6 +36,7 @@ class Item(Base):
     title = Column(String)
     description = Column(String)
     icon = Column(String)
+    location = Column(LatLongColumnType, nullable=True)
     instances = relationship("QuestItem", back_populates="item")
     ownerships = relationship("ItemOwnership", back_populates="item")
 
