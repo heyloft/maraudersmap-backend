@@ -72,6 +72,18 @@ def get_item_ownerships(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.ItemOwnership).offset(skip).limit(limit).all()
 
 
+def get_item_ownerships_by_user(
+    db: Session, user_id: UUID, skip: int = 0, limit: int = 100
+):
+    return (
+        db.query(models.ItemOwnership)
+        .where(models.ItemOwnership.owner_id == user_id)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+
 def get_item_ownership(db: Session, item_ownership_id: UUID):
     return db.query(models.ItemOwnership).filter_by(id=item_ownership_id).one_or_none()
 

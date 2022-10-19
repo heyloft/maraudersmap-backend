@@ -108,6 +108,16 @@ def read_item_ownerships(
     return item_ownerships
 
 
+@app.get("/itemOwnerships/{user_id}", response_model=list[schemas.ItemOwnership])
+def read_item_ownerships_by_id(
+    user_id: UUID, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
+):
+    item_ownerships = crud.get_item_ownerships_by_user(
+        db=db, user_id=user_id, skip=skip, limit=limit
+    )
+    return item_ownerships
+
+
 @app.get("/itemOwnerships/{item_ownership_id}", response_model=schemas.ItemOwnership)
 def read_item_ownership(item_ownership_id: UUID, db: Session = Depends(get_db)):
     item_ownership = crud.get_item_ownership(db, item_ownership_id=item_ownership_id)
