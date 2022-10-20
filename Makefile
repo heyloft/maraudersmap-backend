@@ -16,7 +16,7 @@ init: ## Initialize new development environment
 db: ## Initialize and start database
 	if !(docker volume ls -q --filter "name=maraudersmap-data" | grep -q .); then docker volume create maraudersmap-data; fi
 	if docker ps -qa --filter "name=maraudersmap-pg" | grep -q .; then docker start maraudersmap-pg; else docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=password -v maraudersmap-data:/var/lib/postgresql/data --name maraudersmap-pg postgres:14.5; fi
-	echo "Give db some time to warm up..." && sleep 2
+	echo "Give db some time to warm up..." && sleep 4
 	cd maraudersmap && poetry run alembic upgrade head
 	docker attach maraudersmap-pg
 

@@ -44,6 +44,7 @@ class ItemBase(OrmBase):
     item_type: ItemType
     description: str | None = None
     icon: str
+    location: LatLong | None = None
 
 
 class ItemCreate(ItemBase):
@@ -70,22 +71,19 @@ class ItemOwnershipCreate(ItemOwnershipBase):
 
 
 class QuestItemBase(OrmBase):
-    item: Item
     location: LatLong
     unlock_method: UnlockMethod
 
 
 class QuestItemCreate(QuestItemBase):
-    pass
+    item_id: UUID
 
 
 class QuestItem(QuestItemBase):
     id: UUID
-    item: ItemBase
-    quest: QuestBase
-
-    class Config:
-        orm_mode = True
+    item: Item
+    quest_id: UUID
+    quest: Quest
 
 
 class QuestBase(OrmBase):
@@ -120,6 +118,10 @@ class QuestParticipationCreate(QuestParticipationBase):
     user_id: UUID
 
 
+class QuestParticipationUpdate(QuestParticipationBase):
+    pass
+
+
 class QuestDependencyBase(OrmBase):
     quest_to_finish_before_id: UUID = Field(foreign_key="quest_to_finish_before_id")
     quest_to_finish_after_id: UUID = Field(foreign_key="quest_to_finish_after_id")
@@ -141,3 +143,10 @@ class EventParticipationCreate(EventParticipationBase):
 class EventParticipation(EventParticipationBase):
     event: Event
     user: User
+
+
+class EventParticipationUpdate(EventParticipationBase):
+    pass
+
+
+QuestItem.update_forward_refs()

@@ -50,6 +50,24 @@ def create_quest_participation(
     )
 
 
+@app.put(
+    "/questParticipations/{user_id}/{quest_id}",
+    response_model=schemas.QuestParticipation,
+)
+def update_quest_participation(
+    user_id: UUID,
+    quest_id: UUID,
+    quest_participation: schemas.QuestParticipationUpdate,
+    db: Session = Depends(get_db),
+):
+    return crud.update_quest_participation(
+        db=db,
+        user_id=user_id,
+        quest_id=quest_id,
+        quest_participation=quest_participation,
+    )
+
+
 @app.get("/items/", response_model=list[schemas.Item])
 def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     items = crud.get_items(db, skip=skip, limit=limit)
@@ -90,6 +108,16 @@ def read_item_ownerships(
     return item_ownerships
 
 
+@app.get("/itemOwnerships/{user_id}", response_model=list[schemas.ItemOwnership])
+def read_item_ownerships_by_id(
+    user_id: UUID, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
+):
+    item_ownerships = crud.get_item_ownerships_by_user(
+        db=db, user_id=user_id, skip=skip, limit=limit
+    )
+    return item_ownerships
+
+
 @app.get("/itemOwnerships/{item_ownership_id}", response_model=schemas.ItemOwnership)
 def read_item_ownership(item_ownership_id: UUID, db: Session = Depends(get_db)):
     item_ownership = crud.get_item_ownership(db, item_ownership_id=item_ownership_id)
@@ -107,7 +135,7 @@ def create_item_ownership(
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     create_user = crud.create_user(db=db, user=user)
     if create_user is None:
-        raise HTTPException(status_code=404, detail="Username is already in use")
+        raise HTTPException(status_code=400, detail="Username is already in use")
     return create_user
 
 
@@ -117,12 +145,34 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return users
 
 
-@app.get("/users/{username}", response_model=schemas.User)
-def read_user(username: str, db: Session = Depends(get_db)):
-    user = crud.get_user(db=db, username=username)
+@app.get("/users/{user_id}", response_model=schemas.User)
+def read_user(user_id: UUID, db: Session = Depends(get_db)):
+    user = crud.get_user(db=db, user_id=user_id)
     if user is None:
         raise HTTPException(status_code=404, detail="Item not found")
     return user
+
+
+@app.get("/users/by_username/{username}", response_model=schemas.User)
+def read_user_by_username(username: str, db: Session = Depends(get_db)):
+    user = crud.get_user_by_username(db=db, user_username=username)
+    if user is None:
+        raise HTTPException(status_code=404, detail="Item not found")
+    return user
+
+
+@app.get("/quests/{quest_id}/items", response_model=list[schemas.QuestItem])
+def read_quest_items(
+    quest_id: UUID, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
+):
+    return crud.get_quest_items(db=db, quest_id=quest_id, skip=skip, limit=limit)
+
+
+@app.post("/quests/{quest_id}/items/", response_model=schemas.QuestItem)
+def create_quest_item(
+    quest_id: UUID, quest_item: schemas.QuestItemCreate, db: Session = Depends(get_db)
+):
+    return crud.create_quest_item(db=db, quest_id=quest_id, quest_item=quest_item)
 
 
 @app.post("/quests/", response_model=schemas.Quest)
@@ -137,10 +187,43 @@ def create_quest_dependency(
     return crud.create_quest_dependency(db=db, quest_dependency=quest_dependency)
 
 
-@app.post("/eventParticipation/", response_model=schemas.EventParticipationCreate)
+@app.get(
+    "/eventParticipations/{user_id}/{event_id}/",
+    response_model=schemas.EventParticipation,
+)
+def read_event_participation(
+    user_id: UUID, event_id: UUID, db: Session = Depends(get_db)
+):
+    eventParticipation = crud.get_event_participation(
+        db=db, user_id=user_id, event_id=event_id
+    )
+    if eventParticipation is None:
+        raise HTTPException(status_code=404, detail="EventParticipation not found")
+    return eventParticipation
+
+
+@app.post("/eventParticipations/", response_model=schemas.EventParticipationCreate)
 def create_event_participation(
     event_participation: schemas.EventParticipationCreate, db: Session = Depends(get_db)
 ):
     return crud.create_event_participation(
         db=db, event_participation=event_participation
+    )
+
+
+@app.put(
+    "/eventParticipations/{user_id}/{event_id}",
+    response_model=schemas.EventParticipation,
+)
+def update_event_participation(
+    user_id: UUID,
+    event_id: UUID,
+    event_participation: schemas.EventParticipationUpdate,
+    db: Session = Depends(get_db),
+):
+    return crud.update_event_participation(
+        db=db,
+        user_id=user_id,
+        event_id=event_id,
+        event_participation=event_participation,
     )
