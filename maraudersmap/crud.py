@@ -210,7 +210,7 @@ def create_event_participation(
         quest_participation = models.QuestParticipation(
             status=models.QuestStatus.UNSTARTED,
             quest_id=quest.id,
-            user_id=event_participation.user_id,
+            user_id=user_id,
         )
         db.add(quest_participation)
 
