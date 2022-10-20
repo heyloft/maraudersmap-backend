@@ -2,6 +2,7 @@ from uuid import UUID
 
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.responses import PlainTextResponse
+from fastapi.routing import APIRoute
 from sqlalchemy.orm import Session
 
 from maraudersmap import ascii, crud, models, schemas
@@ -9,7 +10,14 @@ from maraudersmap.database.database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+
+# This makes function names for generatad clients more readable,
+# but also puts more trust in the endpoint author to define unique names!
+def readable_route_id(route: APIRoute):
+    return f"{route.name}"
+
+
+app = FastAPI(generate_unique_id_function=readable_route_id)
 
 
 def get_db():
@@ -118,6 +126,7 @@ def update_quest_participation(
     quest_participation: schemas.QuestParticipationUpdate,
     db: Session = Depends(get_db),
 ):
+    print(quest_participation)
     if crud.get_user(db=db, user_id=user_id) is None:
         raise HTTPException(status_code=404, detail="User not found")
     return crud.update_quest_participation(
