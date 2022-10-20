@@ -49,8 +49,7 @@ c7c99df4-c49e-4c44-8911-450e6774b3f6	0	cc0d3b66-3edf-4259-a5f4-09e1ee32ffd3
 --
 
 COPY public.items (id, title, description, icon, item_type) FROM stdin;
-bb743198-edb5-4b7f-a654-6a8336ed28e3	Ancient T-shirt	This is a great T-shirt	some_icon	COLLECTIBLE
-ef9a8c98-182b-466f-b8ab-d4f771b58ad9	Bobby Burger	This is a great burger	some_burger	KEY
+ef9a8c98-182b-466f-b8ab-d4f771b58ad9	The Great Beak	Kind of a skeleton key but more alive	great_beak	KEY
 \.
 
 
@@ -59,7 +58,6 @@ ef9a8c98-182b-466f-b8ab-d4f771b58ad9	Bobby Burger	This is a great burger	some_bu
 --
 
 COPY public."itemOwnerships" (id, obtained_at, item_id, owner_id) FROM stdin;
-04c6960d-de98-4f84-be74-424a8d03b9b0	2022-10-18 23:00:12.097	bb743198-edb5-4b7f-a654-6a8336ed28e3	5f507915-8f2a-42a4-8880-a5f506016f3b
 \.
 
 
@@ -68,8 +66,7 @@ COPY public."itemOwnerships" (id, obtained_at, item_id, owner_id) FROM stdin;
 --
 
 COPY public.quests (id, title, description, active_from, active_to, event_id, unlock_method, location) FROM stdin;
-8a369b29-f0c7-4e65-944a-6f754a13c3b4	Magic Journey	What will this journey bring?	2022-10-18 22:56:44.592	2023-02-18 22:56:44.592	cc0d3b66-3edf-4259-a5f4-09e1ee32ffd3	QR_CODE	{63.431322680001635,10.400775104320102}
-01c438c0-cc65-4823-9d90-f6a2997f6bb1	The forgotten flamingo	It is really pink!	2022-10-18 22:56:44.592	2023-02-18 22:56:44.592	cc0d3b66-3edf-4259-a5f4-09e1ee32ffd3	QR_CODE	{63.43138986156285,10.400792538678703}
+01c438c0-cc65-4823-9d90-f6a2997f6bb1	The forgotten flamingo	It is really pink!	2022-10-18 22:56:44.592	2023-02-18 22:56:44.592	cc0d3b66-3edf-4259-a5f4-09e1ee32ffd3	QR_CODE	{63.4313324771315, 10.401029444812947}
 \.
 
 
@@ -86,6 +83,7 @@ COPY public."questDependencies" (quest_to_finish_before_id, quest_to_finish_afte
 --
 
 COPY public."questItems" (id, quest_id, item_id, location, unlock_method) FROM stdin;
+27c5aee7-584b-4a88-9089-a43523aba9a2	01c438c0-cc65-4823-9d90-f6a2997f6bb1	ef9a8c98-182b-466f-b8ab-d4f771b58ad9	 {63.43137186651732, 10.401065453445952}	QR_CODE
 \.
 
 
@@ -94,7 +92,6 @@ COPY public."questItems" (id, quest_id, item_id, location, unlock_method) FROM s
 --
 
 COPY public."questParticipations" (user_id, status, quest_id) FROM stdin;
-c7c99df4-c49e-4c44-8911-450e6774b3f6	UNSTARTED	8a369b29-f0c7-4e65-944a-6f754a13c3b4
 c7c99df4-c49e-4c44-8911-450e6774b3f6	UNSTARTED	01c438c0-cc65-4823-9d90-f6a2997f6bb1
 \.
 

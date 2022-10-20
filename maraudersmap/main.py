@@ -187,6 +187,21 @@ def create_quest_dependency(
     return crud.create_quest_dependency(db=db, quest_dependency=quest_dependency)
 
 
+@app.get(
+    "/eventParticipations/{user_id}/{event_id}/",
+    response_model=schemas.EventParticipation,
+)
+def read_event_participation(
+    user_id: UUID, event_id: UUID, db: Session = Depends(get_db)
+):
+    eventParticipation = crud.get_event_participation(
+        db=db, user_id=user_id, event_id=event_id
+    )
+    if eventParticipation is None:
+        raise HTTPException(status_code=404, detail="EventParticipation not found")
+    return eventParticipation
+
+
 @app.post("/eventParticipations/", response_model=schemas.EventParticipationCreate)
 def create_event_participation(
     event_participation: schemas.EventParticipationCreate, db: Session = Depends(get_db)
