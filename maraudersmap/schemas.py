@@ -66,7 +66,6 @@ class ItemOwnership(ItemOwnershipBase):
 
 
 class ItemOwnershipCreate(ItemOwnershipBase):
-    owner_id: UUID = Field(foreign_key="user.id")
     item_id: UUID = Field(foreign_key="item.id")
 
 
@@ -115,7 +114,6 @@ class QuestParticipation(QuestParticipationBase):
 
 class QuestParticipationCreate(QuestParticipationBase):
     quest_id: UUID
-    user_id: UUID
 
 
 class QuestParticipationUpdate(QuestParticipationBase):
@@ -137,7 +135,6 @@ class EventParticipationBase(OrmBase):
 
 class EventParticipationCreate(EventParticipationBase):
     event_id: UUID
-    user_id: UUID
 
 
 class EventParticipation(EventParticipationBase):

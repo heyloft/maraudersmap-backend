@@ -27,18 +27,18 @@ def get_unstarted_quests(
 
 def get_quests_by_status(
     db: Session,
-    event_id: UUID,
     user_id: UUID,
-    status: models.QuestStatus,
+    event_id: UUID = None,
+    status: models.QuestStatus = None,
     skip: int = 0,
     limit: int = 100,
 ):
     return (
         db.query(models.QuestParticipation)
         .where(
-            models.QuestParticipation.quest.has(event_id=event_id),
             models.QuestParticipation.user_id == user_id,
-            models.QuestParticipation.status == status,
+            event_id is None or models.QuestParticipation.quest.has(event_id=event_id),
+            status is None or models.QuestParticipation.status == status,
         )
         .offset(skip)
         .limit(limit)
@@ -68,16 +68,12 @@ def create_quest_item(
     return db_quest_item
 
 
-def get_item_ownerships(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.ItemOwnership).offset(skip).limit(limit).all()
-
-
-def get_item_ownerships_by_user(
+def get_user_item_ownerships(
     db: Session, user_id: UUID, skip: int = 0, limit: int = 100
 ):
     return (
         db.query(models.ItemOwnership)
-        .where(models.ItemOwnership.owner_id == user_id)
+        .filter_by(owner_id=user_id)
         .offset(skip)
         .limit(limit)
         .all()
@@ -85,7 +81,7 @@ def get_item_ownerships_by_user(
 
 
 def get_item_ownership(db: Session, item_ownership_id: UUID):
-    return db.query(models.ItemOwnership).filter_by(id=item_ownership_id).one_or_none()
+    return db.query(models.ItemOwnership).get(item_ownership_id)
 
 
 def create_item(db: Session, item: schemas.ItemCreate):
@@ -108,8 +104,10 @@ def get_events(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Event).offset(skip).limit(limit).all()
 
 
-def create_item_ownership(db: Session, item_ownership: schemas.ItemOwnershipCreate):
-    db_item_ownership = models.ItemOwnership(**item_ownership.dict())
+def create_item_ownership(
+    db: Session, user_id: UUID, item_ownership: schemas.ItemOwnershipCreate
+):
+    db_item_ownership = models.ItemOwnership(user_id=user_id, **item_ownership.dict())
     db.add(db_item_ownership)
     db.commit()
     db.refresh(db_item_ownership)
@@ -117,9 +115,11 @@ def create_item_ownership(db: Session, item_ownership: schemas.ItemOwnershipCrea
 
 
 def create_quest_participation(
-    db: Session, quest_participation: schemas.QuestParticipationCreate
+    db: Session, user_id: UUID, quest_participation: schemas.QuestParticipationCreate
 ):
-    db_quest_participation = models.QuestParticipation(**quest_participation.dict())
+    db_quest_participation = models.QuestParticipation(
+        user_id=user_id, **quest_participation.dict()
+    )
     db.add(db_quest_participation)
     db.commit()
     db.refresh(db_quest_participation)
@@ -163,11 +163,15 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 
 
 def get_user(db: Session, user_id: UUID):
-    return db.query(models.User).filter_by(id=user_id).one_or_none()
+    return db.query(models.User).get(user_id)
 
 
 def get_user_by_username(db: Session, user_username: str):
     return db.query(models.User).filter_by(username=user_username).one_or_none()
+
+
+def get_quest(db: Session, quest_id: UUID):
+    return db.query(models.Quest).get(quest_id)
 
 
 def create_quest(db: Session, quest: schemas.QuestCreate):
@@ -195,9 +199,11 @@ def get_event_participation(db: Session, user_id: UUID, event_id: UUID):
 
 
 def create_event_participation(
-    db: Session, event_participation: schemas.EventParticipationCreate
+    db: Session, user_id: UUID, event_participation: schemas.EventParticipationCreate
 ):
-    db_event_participation = models.EventParticipation(**event_participation.dict())
+    db_event_participation = models.EventParticipation(
+        user_id=user_id, **event_participation.dict()
+    )
     db.add(db_event_participation)
     db_quests = db.query(models.Event).get(event_participation.event_id).quests
     for quest in db_quests:
