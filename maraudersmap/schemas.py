@@ -44,7 +44,6 @@ class ItemBase(OrmBase):
     item_type: ItemType
     description: str | None = None
     icon: str
-    location: LatLong | None = None
 
 
 class ItemCreate(ItemBase):
@@ -70,7 +69,7 @@ class ItemOwnershipCreate(ItemOwnershipBase):
 
 
 class QuestItemBase(OrmBase):
-    location: LatLong
+    location: LatLong | None = None
     unlock_method: UnlockMethod
 
 

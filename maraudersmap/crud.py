@@ -107,7 +107,7 @@ def get_events(db: Session, skip: int = 0, limit: int = 100):
 def create_item_ownership(
     db: Session, user_id: UUID, item_ownership: schemas.ItemOwnershipCreate
 ):
-    db_item_ownership = models.ItemOwnership(user_id=user_id, **item_ownership.dict())
+    db_item_ownership = models.ItemOwnership(owner_id=user_id, **item_ownership.dict())
     db.add(db_item_ownership)
     db.commit()
     db.refresh(db_item_ownership)
