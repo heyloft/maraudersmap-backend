@@ -1,4 +1,4 @@
-name: Fly Deploy
+name: Fly Deploy (Development)
 on:
   push:
     branches: ['main']
@@ -11,4 +11,4 @@ jobs:
       steps:
         - uses: actions/checkout@v2
         - uses: superfly/flyctl-actions/setup-flyctl@master
-        - run: flyctl deploy --remote-only
+        - run: flyctl deploy -c fly.dev.toml --remote-only
