@@ -225,7 +225,6 @@ def update_quest_participation(
     quest_participation: schemas.QuestParticipationUpdate,
     db: Session = Depends(get_db),
 ):
-    print(quest_participation)
     if crud.get_user(db=db, user_id=user_id) is None:
         raise HTTPException(status_code=404, detail="User not found")
     return crud.update_quest_participation(
@@ -261,6 +260,16 @@ def create_item_ownership(
 ):
     if crud.get_user(db=db, user_id=user_id) is None:
         raise HTTPException(status_code=404, detail="User not found")
-    return crud.create_item_ownership(
+    create_ownership_res = crud.create_item_ownership(
         db=db, user_id=user_id, item_ownership=item_ownership
     )
+    # TODO: Make ItemOwnership between User and QuestItem (not just Item),
+    # so that quest_id is more accessible
+    quest_id = (
+        db.query(models.QuestItem)
+        .filter_by(item_id=item_ownership.item_id)
+        .one()
+        .quest_id
+    )
+    crud.sync_quest_participation_progress(db=db, user_id=user_id, quest_id=quest_id)
+    return create_ownership_res
