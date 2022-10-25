@@ -44,7 +44,6 @@ class ItemBase(OrmBase):
     item_type: ItemType
     description: str | None = None
     icon: str
-    location: LatLong | None = None
 
 
 class ItemCreate(ItemBase):
@@ -66,12 +65,11 @@ class ItemOwnership(ItemOwnershipBase):
 
 
 class ItemOwnershipCreate(ItemOwnershipBase):
-    owner_id: UUID = Field(foreign_key="user.id")
     item_id: UUID = Field(foreign_key="item.id")
 
 
 class QuestItemBase(OrmBase):
-    location: LatLong
+    location: LatLong | None = None
     unlock_method: UnlockMethod
 
 
@@ -115,7 +113,6 @@ class QuestParticipation(QuestParticipationBase):
 
 class QuestParticipationCreate(QuestParticipationBase):
     quest_id: UUID
-    user_id: UUID
 
 
 class QuestParticipationUpdate(QuestParticipationBase):
@@ -137,7 +134,6 @@ class EventParticipationBase(OrmBase):
 
 class EventParticipationCreate(EventParticipationBase):
     event_id: UUID
-    user_id: UUID
 
 
 class EventParticipation(EventParticipationBase):
