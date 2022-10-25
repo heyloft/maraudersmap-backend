@@ -17,6 +17,7 @@ from maraudersmap.extra_types import LatLongColumnType
 
 class ItemType(Enum):
     COLLECTIBLE = "COLLECTIBLE"
+    VOUCHER = "VOUCHER"
     KEY = "KEY"
     POI = "POI"
 
@@ -46,6 +47,7 @@ class Item(Base):
 class UnlockMethod(Enum):
     QR_CODE = "QR_CODE"
     LOCATION = "LOCATION"
+    QUEST_COMPLETION = "QUEST_COMPLETION"
 
 
 class Quest(Base):
