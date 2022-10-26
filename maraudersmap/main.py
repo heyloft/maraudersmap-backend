@@ -123,7 +123,7 @@ def read_user_by_username(username: str, db: Session = Depends(get_db)):
 
 @app.post(
     "/users/{user_id}/eventParticipations/",
-    response_model=schemas.EventParticipationCreate,
+    response_model=schemas.EventParticipation,
     tags=["events"],
 )
 def create_event_participation(

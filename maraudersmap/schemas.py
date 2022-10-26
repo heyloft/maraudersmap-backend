@@ -81,7 +81,6 @@ class QuestItem(QuestItemBase):
     id: UUID
     item: Item
     quest_id: UUID
-    quest: Quest
 
 
 class QuestBase(OrmBase):
@@ -100,6 +99,7 @@ class QuestCreate(QuestBase):
 
 class Quest(QuestBase):
     id: UUID
+    items: list[QuestItem]
 
 
 class QuestParticipationBase(OrmBase):
