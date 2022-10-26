@@ -60,8 +60,8 @@ class ItemOwnershipBase(OrmBase):
 
 class ItemOwnership(ItemOwnershipBase):
     id: UUID
-    item: ItemBase
-    owner: UserBase
+    item: Item
+    owner: User
 
 
 class ItemOwnershipCreate(ItemOwnershipBase):
