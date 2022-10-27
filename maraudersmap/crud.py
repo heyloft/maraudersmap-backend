@@ -145,6 +145,64 @@ def update_quest_participation(
     return db_quest_participation_query.one()
 
 
+def sync_quest_participation_progress(db: Session, user_id: UUID, quest_id: UUID):
+    db_participation = db.query(models.QuestParticipation).get(
+        {"user_id": user_id, "quest_id": quest_id}
+    )
+    if db_participation.status != models.QuestStatus.ACTIVE:
+        # Not in progress, nothing will change at this point
+        print("Quest not active, ignoring progress sync request.")
+        return db_participation
+    db_quest_keys_count = (
+        db.query(models.QuestItem)
+        .filter(
+            models.QuestItem.quest_id == quest_id,
+            models.QuestItem.item.has(item_type=models.ItemType.KEY),
+        )
+        .count()
+    )
+    if db_quest_keys_count <= 0:
+        # Edge case: quest does not have any keys.
+        # Currently not letting these quests be finished.
+        print("Quest does not have any keys, ignoring progress sync request.")
+        return db_participation
+    db_user_keys_count = (
+        db.query(models.ItemOwnership)
+        .filter(
+            models.ItemOwnership.owner_id == user_id,
+            models.ItemOwnership.item.has(item_type=models.ItemType.KEY),
+        )
+        .count()
+    )
+    if db_user_keys_count < db_quest_keys_count:
+        # Not finished, no status change required
+        return db_participation
+    db_participation.status = models.QuestStatus.FINISHED
+    db.add(db_participation)
+    db.add_all(
+        build_quest_completion_item_ownerships(
+            db=db, user_id=user_id, quest_id=quest_id
+        )
+    )
+    db.commit()
+    db.refresh(db_participation)
+    return db_participation
+
+
+def build_quest_completion_item_ownerships(db: Session, user_id: UUID, quest_id: UUID):
+    db_quest_completion_items: list[models.QuestItem] = (
+        db.query(models.QuestItem)
+        .filter_by(
+            quest_id=quest_id, unlock_method=models.UnlockMethod.QUEST_COMPLETION
+        )
+        .all()
+    )
+    return [
+        models.ItemOwnership(owner_id=user_id, item_id=item.item.id)
+        for item in db_quest_completion_items
+    ]
+
+
 def create_user(db: Session, user: schemas.UserCreate):
     user_check = (
         db.query(models.User).filter(models.User.username == user.username).first()

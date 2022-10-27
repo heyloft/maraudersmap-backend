@@ -60,8 +60,8 @@ class ItemOwnershipBase(OrmBase):
 
 class ItemOwnership(ItemOwnershipBase):
     id: UUID
-    item: ItemBase
-    owner: UserBase
+    item: Item
+    owner: User
 
 
 class ItemOwnershipCreate(ItemOwnershipBase):
@@ -81,7 +81,6 @@ class QuestItem(QuestItemBase):
     id: UUID
     item: Item
     quest_id: UUID
-    quest: Quest
 
 
 class QuestBase(OrmBase):
@@ -100,6 +99,7 @@ class QuestCreate(QuestBase):
 
 class Quest(QuestBase):
     id: UUID
+    items: list[QuestItem]
 
 
 class QuestParticipationBase(OrmBase):
