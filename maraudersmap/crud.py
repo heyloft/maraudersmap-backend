@@ -170,7 +170,7 @@ def sync_quest_participation_progress(db: Session, user_id: UUID, quest_id: UUID
         db.query(models.ItemOwnership)
         .filter(
             models.ItemOwnership.owner_id == user_id,
-            models.ItemOwnership.item.has(item_type=models.ItemType.KEY),
+            models.ItemOwnership.quest_item.item.has(item_type=models.ItemType.KEY),
         )
         .count()
     )
@@ -198,7 +198,7 @@ def build_quest_completion_item_ownerships(db: Session, user_id: UUID, quest_id:
         .all()
     )
     return [
-        models.ItemOwnership(owner_id=user_id, item_id=item.item.id)
+        models.ItemOwnership(owner_id=user_id, quest_item_id=item.id)
         for item in db_quest_completion_items
     ]
 

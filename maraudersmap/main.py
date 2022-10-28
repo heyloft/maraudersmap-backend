@@ -267,7 +267,7 @@ def create_item_ownership(
     # so that quest_id is more accessible
     quest_id = (
         db.query(models.QuestItem)
-        .filter_by(item_id=item_ownership.item_id)
+        .filter_by(id=item_ownership.quest_item_id)
         .one()
         .quest_id
     )

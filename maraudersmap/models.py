@@ -38,7 +38,7 @@ class Item(Base):
     description = Column(String)
     icon = Column(String)
     instances = relationship("QuestItem", back_populates="item")
-    ownerships = relationship("ItemOwnership", back_populates="item")
+    # ownerships = relationship("ItemOwnership", back_populates="item")
 
     def __repr__(self):
         return "<Item(title='%s')>" % self.title
@@ -116,6 +116,7 @@ class QuestItem(Base):
     item = relationship("Item", back_populates="instances")
     location = Column(LatLongColumnType)
     unlock_method = Column(SQLEnum(UnlockMethod))
+    ownerships = relationship("ItemOwnership", back_populates="quest_item")
 
     def __repr__(self):
         return "<QuestItem(item.title='%s', quest.title='%s')>" % (
@@ -140,8 +141,8 @@ class ItemOwnership(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
     obtained_at = Column(DateTime, default=datetime.now)
-    item_id = Column(UUID(as_uuid=True), ForeignKey("items.id"))
-    item = relationship("Item", back_populates="ownerships")
+    quest_item_id = Column(UUID(as_uuid=True), ForeignKey("questItems.id"))
+    quest_item = relationship("QuestItem", back_populates="ownerships")
     owner_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     owner = relationship("User", back_populates="items")
 
