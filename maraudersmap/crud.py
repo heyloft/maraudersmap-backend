@@ -151,7 +151,6 @@ def sync_quest_participation_progress(db: Session, user_id: UUID, quest_id: UUID
     )
     if db_participation.status != models.QuestStatus.ACTIVE:
         # Not in progress, nothing will change at this point
-        print("Quest not active, ignoring progress sync request.")
         return db_participation
     db_quest_keys_count = (
         db.query(models.QuestItem)
@@ -164,7 +163,6 @@ def sync_quest_participation_progress(db: Session, user_id: UUID, quest_id: UUID
     if db_quest_keys_count <= 0:
         # Edge case: quest does not have any keys.
         # Currently not letting these quests be finished.
-        print("Quest does not have any keys, ignoring progress sync request.")
         return db_participation
     db_user_keys_count = (
         db.query(models.ItemOwnership)
