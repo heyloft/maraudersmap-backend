@@ -67,7 +67,7 @@ COPY public."itemOwnerships" (id, obtained_at, item_id, owner_id) FROM stdin;
 --
 
 COPY public.quests (id, title, description, active_from, active_to, event_id, unlock_method, location) FROM stdin;
-01c438c0-cc65-4823-9d90-f6a2997f6bb1	The forgotten flamingo	It is really pink!	2022-10-18 22:56:44.592	2023-02-18 22:56:44.592	cc0d3b66-3edf-4259-a5f4-09e1ee32ffd3	QR_CODE	{63.4313324771315,10.401029444812947}
+01c438c0-cc65-4823-9d90-f6a2997f6bb1	The forgotten flamingo	It is really pink!	2022-10-18 22:56:44.592	2023-02-18 22:56:44.592	cc0d3b66-3edf-4259-a5f4-09e1ee32ffd3	QR_CODE	{63.43153,10.400901}
 \.
 
 
