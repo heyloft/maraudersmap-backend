@@ -188,7 +188,6 @@ def sync_quest_participation_progress(db: Session, user_id: UUID, quest_id: UUID
     )
     db.commit()
     db.refresh(db_participation)
-    db.commit()
     return db_participation
 
 
