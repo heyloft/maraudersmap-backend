@@ -172,7 +172,7 @@ def sync_quest_participation_progress(db: Session, user_id: UUID, quest_id: UUID
         .join(models.Item)
         .filter(
             models.ItemOwnership.owner_id == user_id,
-            # models.ItemOwnership.quest_item.item.has(item_type=models.ItemType.KEY),
+            models.QuestItem.quest_id == quest_id,
             models.Item.item_type == models.ItemType.KEY,
         )
         .count()
@@ -191,11 +191,6 @@ def sync_quest_participation_progress(db: Session, user_id: UUID, quest_id: UUID
     db.commit()
     db.refresh(db_participation)
     db.commit()
-    # Deletes all ItemOwnerships related to user and quest.
-    # Currently throws error, but is a start. Also lacks the check for voucher for now
-    # db.query(models.ItemOwnership).filter(
-    #     models.ItemOwnership.quest_item.has(quest_id=quest_id)).delete(synchronize_session='fetch')
-    # db.commit()
     return db_participation
 
 
