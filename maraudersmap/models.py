@@ -38,7 +38,6 @@ class Item(Base):
     description = Column(String)
     icon = Column(String)
     instances = relationship("QuestItem", back_populates="item")
-    # ownerships = relationship("ItemOwnership", back_populates="item")
 
     def __repr__(self):
         return "<Item(title='%s')>" % self.title
