@@ -4,6 +4,7 @@ kill_timeout = 5
 processes = []
 
 [env]
+  IS_DEVELOPMENT = "false"
 
 [experimental]
   allowed_public_ports = []
