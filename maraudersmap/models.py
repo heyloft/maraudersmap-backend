@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime
-from enum import Enum, auto
+from enum import Enum
 from typing import List
 
 from sqlalchemy import Column, DateTime
@@ -16,16 +16,17 @@ from maraudersmap.extra_types import LatLongColumnType
 
 
 class ItemType(Enum):
-    COLLECTIBLE = auto()
-    KEY = auto()
-    POI = auto()
+    COLLECTIBLE = "COLLECTIBLE"
+    VOUCHER = "VOUCHER"
+    KEY = "KEY"
+    POI = "POI"
 
 
 class QuestStatus(Enum):
-    HIDDEN = auto()
-    UNSTARTED = auto()
-    ACTIVE = auto()
-    FINISHED = auto()
+    HIDDEN = "HIDDEN"
+    UNSTARTED = "UNSTARTED"
+    ACTIVE = "ACTIVE"
+    FINISHED = "FINISHED"
 
 
 class Item(Base):
@@ -44,8 +45,9 @@ class Item(Base):
 
 
 class UnlockMethod(Enum):
-    QR_CODE = auto()
-    LOCATION = auto()
+    QR_CODE = "QR_CODE"
+    LOCATION = "LOCATION"
+    QUEST_COMPLETION = "QUEST_COMPLETION"
 
 
 class Quest(Base):

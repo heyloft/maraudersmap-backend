@@ -1,7 +1,15 @@
+from functools import lru_cache
+
 from pydantic import BaseSettings, validator
 
 
+@lru_cache()
+def get_settings():
+    return Settings()
+
+
 class Settings(BaseSettings):
+    IS_DEVELOPMENT: bool = True
     DATABASE_CONNECTION_STRING: str | None = None
 
     @validator("DATABASE_CONNECTION_STRING", pre=True, always=True)

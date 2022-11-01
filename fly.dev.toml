@@ -1,11 +1,10 @@
-# fly.toml file generated for heyloft-maraudersmap-backend on 2022-09-10T15:06:58+02:00
-
-app = "heyloft-maraudersmap-backend"
+app = "heyloft-maraudersmap-backend-dev"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
 
 [env]
+  IS_DEVELOPMENT = "true"
 
 [experimental]
   allowed_public_ports = []
