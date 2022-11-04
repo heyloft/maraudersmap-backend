@@ -60,7 +60,7 @@ ef9a8c98-182b-466f-b8ab-d4f771b58ad9	Skeleton Key	Kind of a skeleton key but mor
 --
 
 COPY public.quests (id, title, description, active_from, active_to, event_id, unlock_method, location) FROM stdin;
-01c438c0-cc65-4823-9d90-f6a2997f6bb1	Whispering Wind	Somewhere on this floor lingers an item that does not belong in this realm, a hidden key in the form of a QR code	2022-10-18 22:56:44.592	2023-02-18 22:56:44.592	cc0d3b66-3edf-4259-a5f4-09e1ee32ffd3	QR_CODE	{63.43153,10.400901}
+01c438c0-cc65-4823-9d90-f6a2997f6bb1	Whispering Wind	Somewhere on this floor lingers an item that does not belong in this realm, a hidden key in the form of a QR code	2022-10-18 22:56:44.592	2023-02-18 22:56:44.592	cc0d3b66-3edf-4259-a5f4-09e1ee32ffd3	QR_CODE	{63.431626,10.400973}
 \.
 
 
