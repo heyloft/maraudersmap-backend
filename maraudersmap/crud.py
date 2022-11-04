@@ -166,9 +166,12 @@ def sync_quest_participation_progress(db: Session, user_id: UUID, quest_id: UUID
         return db_participation
     db_user_keys_count = (
         db.query(models.ItemOwnership)
+        .join(models.QuestItem)
+        .join(models.Item)
         .filter(
             models.ItemOwnership.owner_id == user_id,
-            models.ItemOwnership.item.has(item_type=models.ItemType.KEY),
+            models.QuestItem.quest_id == quest_id,
+            models.Item.item_type == models.ItemType.KEY,
         )
         .count()
     )
@@ -176,6 +179,7 @@ def sync_quest_participation_progress(db: Session, user_id: UUID, quest_id: UUID
         # Not finished, no status change required
         return db_participation
     db_participation.status = models.QuestStatus.FINISHED
+
     db.add(db_participation)
     db.add_all(
         build_quest_completion_item_ownerships(
@@ -196,7 +200,7 @@ def build_quest_completion_item_ownerships(db: Session, user_id: UUID, quest_id:
         .all()
     )
     return [
-        models.ItemOwnership(owner_id=user_id, item_id=item.item.id)
+        models.ItemOwnership(owner_id=user_id, quest_item_id=item.id)
         for item in db_quest_completion_items
     ]
 

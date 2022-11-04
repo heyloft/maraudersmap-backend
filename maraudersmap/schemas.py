@@ -54,20 +54,6 @@ class Item(ItemBase):
     id: UUID
 
 
-class ItemOwnershipBase(OrmBase):
-    obtained_at: datetime
-
-
-class ItemOwnership(ItemOwnershipBase):
-    id: UUID
-    item: Item
-    owner: User
-
-
-class ItemOwnershipCreate(ItemOwnershipBase):
-    item_id: UUID = Field(foreign_key="item.id")
-
-
 class QuestItemBase(OrmBase):
     location: LatLong | None = None
     unlock_method: UnlockMethod
@@ -81,6 +67,20 @@ class QuestItem(QuestItemBase):
     id: UUID
     item: Item
     quest_id: UUID
+
+
+class ItemOwnershipBase(OrmBase):
+    obtained_at: datetime
+
+
+class ItemOwnership(ItemOwnershipBase):
+    id: UUID
+    quest_item: QuestItem
+    owner: User
+
+
+class ItemOwnershipCreate(ItemOwnershipBase):
+    quest_item_id: UUID = Field(foreign_key="quest_item_id")
 
 
 class QuestBase(OrmBase):
