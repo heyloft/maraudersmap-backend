@@ -7,9 +7,13 @@ help:
 .PHONY: init
 init: ## Initialize new development environment
 	curl -sSL https://install.python-poetry.org | python3 -
+	poetry config --local virtualenvs.in-project true
 	poetry install
 	poetry run pre-commit install
 	cp maraudersmap/base.env maraudersmap/.env
+
+.PHONY: vscode
+vscode: ## Connect Poetry virtual environment to VSCode (WARNING: replaces .vscode/settings.json)
 	VENV_PATH=$$(poetry env info -p) && VENV_EXEC_PATH=$$(poetry run which python) && mkdir -p .vscode && echo "{\n\t\"python.pythonPath\": \"$$VENV_PATH\",\n\t\"python.defaultInterpreterPath\": \"$$VENV_EXEC_PATH\"\n}" > .vscode/settings.json
 
 .PHONY: db

@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "maraudersmap"
 version = "0.1.0"
-description = "Backend for the Marauder’s Map Project"
+description = "Backend for the Marauder's Map Project"
 authors = ["Mathias Oterhals Myklebust <mathias@oterbust.no>"]
 readme = "README.md"
 
