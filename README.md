@@ -150,7 +150,7 @@ docker run -p 5432:5432 -e POSTGRES_PASSWORD=password -v maraudersmap-data:/var/
 
 ### ⏩️ Database Migrations
 
-Any changes to the database schema need to be documented in an Alembic migration file (`maraudersmap/alembic/versions`), which is used to upgrade tables in existing databases. 
+Any changes to the database schema need to be documented in an [Alembic](https://alembic.sqlalchemy.org/) migration file (`maraudersmap/alembic/versions`), which is used to upgrade tables in existing databases. 
 
 #### Create migrations
 > make sure the database is running
