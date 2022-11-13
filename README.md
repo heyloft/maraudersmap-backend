@@ -106,9 +106,9 @@ Valid:          True
 </details>
 
 ### 🔡 Environment variables
-A template `base.env` file is included inside `/maraudersmap`, which can be copied to a local, gitignored `.env` file. These values are only used for local development (e.g. a local database connection string).
+A template `.env.template` file is included inside `/maraudersmap`, which can be copied to a local, gitignored `.env` file. These values are only used for local development (e.g. a local database connection string).
 ```
-cp maraudersmap/base.env maraudersmap/.env
+cp maraudersmap/.env.template maraudersmap/.env
 ```
 
 ### 🗄️ Start database
