@@ -10,7 +10,7 @@ init: ## Initialize new development environment
 	poetry config --local virtualenvs.in-project true
 	poetry install
 	poetry run pre-commit install
-	cp maraudersmap/base.env maraudersmap/.env
+	cp maraudersmap/.env.template maraudersmap/.env
 
 .PHONY: vscode
 vscode: ## Connect Poetry virtual environment to VSCode (WARNING: replaces .vscode/settings.json)

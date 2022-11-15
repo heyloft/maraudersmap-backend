@@ -106,9 +106,9 @@ Valid:          True
 </details>
 
 ### 🔡 Environment variables
-A template `base.env` file is included inside `/maraudersmap`, which can be copied to a local, gitignored `.env` file. These values are only used for local development (e.g. a local database connection string).
+A template `.env.template` file is included inside `/maraudersmap`, which can be copied to a local, gitignored `.env` file. These values are only used for local development (e.g. a local database connection string).
 ```
-cp maraudersmap/base.env maraudersmap/.env
+cp maraudersmap/.env.template maraudersmap/.env
 ```
 
 ### 🗄️ Start database
@@ -208,42 +208,5 @@ docker volume rm maraudersmap-data
 ## 🌐 Deployment (with Fly.io)
 The backend can be deployed in a lot of places. We currently use [Fly.io](https://fly.io/) for quick prototyping.
 
-#### Initial setup and database
-1. Install [`flyctl`](https://fly.io/docs/hands-on/install-flyctl/)
-2. Create an account with `fly auth signup` or login with `fly auth login`
-3. Create PostgreSQL cluster app
-    ```
-    fly postgres create -n <unique-psql-app-name>
-    ```
+See [FLY_DEPLOYMENT.md](FLY_DEPLOYMENT.md)
 
-#### Development app
-
-1. Create fly app
-    ```
-    fly apps create <unique-dev-app-name>
-    ```
-2. Connect to the PostgreSQL cluster you created above
-    ```
-    fly postgres attach --app <unique-dev-app-name> <unique-psql-app-name>
-    ```
-3. Set the `app` property to `<unique-dev-app-name>` in `fly.dev.toml`
-4. Deploy
-    ```
-    fly deploy -c fly.dev.toml
-    ```
-
-#### Production app
-
-1. Create fly app
-    ```
-    fly apps create <unique-prod-app-name>
-    ```
-2. Connect to the PostgreSQL cluster you created above
-    ```
-    fly postgres attach --app <unique-prod-app-name> <unique-psql-app-name>
-    ```
-3. Set the `app` property to `<unique-prod-app-name>` in `fly.prod.toml`
-4. Deploy
-    ```
-    fly deploy -c fly.prod.toml
-    ```
