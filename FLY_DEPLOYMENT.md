@@ -8,7 +8,7 @@ GitHub Actions is used to deploy automatically on branch updates to separate Fly
 
 See GitHub Actions [workflow files](.github/workflows) for more details.
 
-Depends on the `FLY_API_TOKEN` repository secret.
+Depends on the `FLY_API_TOKEN` repository secret, and assumes that the corresponding user already has a Fly.io app with the name defined in `fly.toml`.
 
 ### 💪 Manually
 
